@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
-        <img src="@/assets/logo.png" alt="Vuetify.js" class="mb-5">
+        <img src="https://www.lautarorosas.cl/home/administrador/module_imagenes/imagenes/618.jpg" alt="LautaroRosas.jpg" class="mb-5">
         <blockquote>
           &#8220;Tu trabajo va a ocupar una gran parte de tu vida, y la única forma de estar verdaderamente satisfecho es hacer lo que crees que es un gran trabajo. Y la única forma de hacer un gran trabajo es amar lo que haces.&#8221;
           <footer>
