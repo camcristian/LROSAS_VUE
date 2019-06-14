@@ -4,7 +4,7 @@
             <v-card>
                 <v-toolbar dark color="blue darken-3">
                     <v-toolbar-title>
-                        Acceso al Sistema
+                        Acceso
                     </v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>

@@ -23,27 +23,27 @@
             <v-list-tile slot="activator">
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Almacén
+                  Comercial
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'categorias'}">
+            <v-list-tile :to="{ name: ''}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Categorías
+                  Socios
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'articulos'}">
+            <v-list-tile :to="{ name: ''}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Artículos
+                  Ejecutivos
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -55,27 +55,27 @@
             <v-list-tile slot="activator">
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Compras
+                  Riesgo
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'ingresos'}">
+            <v-list-tile :to="{ name: ''}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Ingresos
+                  Cobranza
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'proveedores'}">
+            <v-list-tile :to="{ name: ''}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Proveedores
+                  Normalización
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -87,27 +87,27 @@
             <v-list-tile slot="activator">
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Ventas
+                  Informatica
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'ventas'}">
+            <v-list-tile :to="{ name: ''}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Ventas
+                  Control
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'clientes'}">
+            <v-list-tile :to="{ name: ''}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Clientes
+                  Desarrollo
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -161,7 +161,7 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Consultas compras
+                  Cooperativa
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -171,7 +171,7 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Consultas ventas
+                  Ventas
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -189,13 +189,13 @@
     >
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <span class="hidden-sm-and-down">Sistema</span>
+        <span class="hidden-sm-and-down">Sistema SCG</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="salir" v-if="logueado" icon>
+      <v-btn @click="salir" v-if="logueado">
         <v-icon>logout</v-icon> Salir
       </v-btn>
-      <v-btn :to="{name: 'login'}" v-else>
+      <v-btn :to="{name: 'login'}" v-else >
         <v-icon>apps</v-icon> Login
       </v-btn>
     </v-toolbar>
@@ -211,7 +211,7 @@
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
             <v-card-text class="white--text pt-0">
-              IncanatoIT &copy;2018
+              LautaroRosas &copy;2019
             </v-card-text>
           </v-card>
         </v-flex>

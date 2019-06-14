@@ -2,15 +2,12 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
-        <img src="https://www.lautarorosas.cl/home/administrador/module_imagenes/imagenes/618.jpg" alt="LautaroRosas.jpg" class="mb-5">
-        <blockquote>
-          &#8220;Tu trabajo va a ocupar una gran parte de tu vida, y la única forma de estar verdaderamente satisfecho es hacer lo que crees que es un gran trabajo. Y la única forma de hacer un gran trabajo es amar lo que haces.&#8221;
-          <footer>
-            <small>
-              <em>&mdash;Steve Jobs</em>
-            </small>
-          </footer>
-        </blockquote>
+        <img width="350"  src="https://www.lautarorosas.cl/home/administrador/module_imagenes/imagenes/618.jpg" alt="LautaroRosas.jpg" class="mb-5 responsive-img">
+       
+         <h1>Bienvenidos</h1>
+         <h2>Sistema de Control de Gestión </h2>
+        
+       
       </v-layout>
     </v-slide-y-transition>
   </v-container>
