@@ -10,6 +10,7 @@ import Proveedor from './components/Proveedor.vue'
 import Login from './components/Login.vue'
 import Ingreso from './components/Ingreso.vue'
 import Venta from './components/Venta.vue'
+import Planificador from './components/Planificador.vue'
 import store from './store'
 
 Vue.use(Router)
@@ -102,6 +103,14 @@ var router = new Router({
       path: '/login',
       name: 'login',
       component: Login,
+      meta : {
+        libre: true
+      }
+    },
+    {
+      path: '/Planificador',
+      name: 'Planificador',
+      component: Planificador,
       meta : {
         libre: true
       }
