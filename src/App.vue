@@ -114,38 +114,7 @@
 
           </v-list-group>
         </template>
-        <template v-if="esAdministrador">
-          <v-list-group>
-            <v-list-tile slot="activator">
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  Accesos
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile :to="{ name: 'roles'}">
-              <v-list-tile-action>
-                <v-icon>table_chart</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  Roles
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile :to="{ name: 'usuarios'}">
-              <v-list-tile-action>
-                <v-icon>table_chart</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  Usuarios
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-
-          </v-list-group>
-        </template>
+        
         <template v-if="esAdministrador">
           <v-list-group>
             <v-list-tile slot="activator">
@@ -175,9 +144,67 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+          </v-list-group>
+        </template>
+ 
+ 
+ <template v-if="esAdministrador || esAlmacenero">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Gestión
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'Planificador'}">
+              <v-list-tile-action>
+                <v-icon>date_range</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Planificador
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+         
 
           </v-list-group>
         </template>
+
+<template v-if="esAdministrador">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Accesos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'roles'}">
+              <v-list-tile-action>
+                <v-icon>person_outline</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Roles
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'usuarios'}">
+              <v-list-tile-action>
+                <v-icon>people</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Usuarios
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+          </v-list-group>
+        </template>
+
       </v-list>
     </v-navigation-drawer>
     <v-toolbar

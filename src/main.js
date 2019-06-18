@@ -7,7 +7,10 @@ import store from './store'
 import axios from 'axios'
 
 Vue.config.productionTip = false
-axios.defaults.baseURL='http://www.lautaroweb.cl:8070/'
+//  axios.defaults.baseURL='http://www.lautaroweb.cl:8070/'
+
+axios.defaults.baseURL='https://localhost:44388/'
+
 new Vue({
   router,
   store,

@@ -40,14 +40,14 @@
                     color="primary"
                     dark
                   >
-                    <v-btn icon>
+                    <!-- <v-btn icon>
                       <v-icon>edit</v-icon>
-                    </v-btn>
+                    </v-btn> -->
                     <v-toolbar-title v-html="event.title"></v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <!-- <v-btn icon>
-                      <v-icon>favorite</v-icon>
-                    </v-btn> -->
+                    
+                      {{date}}
+              
                     <!-- <v-btn icon>
                       <v-icon>more_vert</v-icon>
                     </v-btn> -->
@@ -94,7 +94,14 @@
       class="text-xs-center"
     >
     
-   
+
+<!-- 
+ <v-date-picker
+            v-model="fecha"
+          
+          ></v-date-picker>
+
+   {{fecha}} -->
 
     </v-flex>
     <v-flex
@@ -145,60 +152,61 @@
 <script>
   export default {
     data: () => ({
-      today: '2019-01-08',
+      mes:new Date().toISOString().substr(0, 7),
+      today: new Date().toISOString().substr(0, 10),
       events: [
         {
           title: 'ENVIO D16',
           details: 'Primer envio de SBIF',
-          date: '2018-12-30',
+          date: '2019-06-30',
           open: false
         },
         {
           title: 'REUNIÓN GERENCIAL',
           details: 'Reunión tema web intranet',
-          date: '2018-12-31',
+          date: '2019-06-31',
           open: false
         },
         {
           title: 'ENVIO D17',
           details: 'Going to the beach!',
-          date: '2019-01-01',
+          date: '2019-06-01',
           open: false
         },
         {
           title: 'REUNIÓN ASIVA',
           details: 'Spending time on how we do not have enough time',
-          date: '2019-01-07',
+          date: '2019-06-07',
           open: false
         },
         {
           title: 'INSTALACIONES',
           details: 'Celebrate responsibly',
-          date: '2019-01-03',
+          date: '2019-06-03',
           open: false
         },
         {
           title: 'COMITE PARITARIO',
           details: 'Eat chocolate until you pass out',
-          date: '2019-01-01',
+          date: '2019-06-01',
           open: false
         },
         {
           title: 'VIAJE ANTOFAGASTA',
           details: 'Mute myself the whole time and wonder why I am on this call',
-          date: '2019-01-21',
+          date: '2019-06-21',
           open: false
         },
         {
           title: 'MODULO DE RIESGO',
           details: 'Code like there is no tommorrow',
-          date: '2019-02-01',
+          date: '2019-06-01',
           open: false
         }
       ],
         type: 'month',
-      start: '2019-01-01',
-      end: '2019-01-06'
+      start: new Date().toISOString().substr(0, 10),
+      end: '2020-01-01'
     }),
     computed: {
       // convert the list of events into a map of lists keyed by date
