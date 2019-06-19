@@ -1,65 +1,65 @@
 <template>
- <v-layout wrap>
-    <v-flex
-      xs12
-      class="mb-3"
-    >
+  <v-layout wrap>
+
+<!-- INICIO DIAGOLO  DE NUEVO EVENTO -->
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo Evento</v-btn>
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-text-field v-model="titulo" label="Titulo">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field v-model="detalle" label="Detalle">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-date-picker v-model="picker" :landscape="landscape" :reactive="reactive" locale="es-cl" full-width ></v-date-picker>
+              </v-flex>
+              <v-flex xs12 sm12 md12 v-show="valida">
+                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                </div>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="guardar">Enviar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+<!-- FIN DIAGOLO  DE NUEVO EVENTO -->
+
+
+<!-- INICIO CALENDARIO -->
+    <v-flex xs12 class="mb-3">
       <v-sheet height="500">
-        <v-calendar
-        ref="calendar"
-            v-model="start"
-            :type="type"
-          :now="today"
-          :value="today"
-          color="primary"
-          locale="es-cl"
-        >
+        <v-calendar ref="calendar" v-model="start" :type="type" :now="today" :value="today" color="primary"
+          locale="es-cl">
           <template v-slot:day="{ date }">
             <template v-for="event in eventsMap[date]">
-              <v-menu
-                :key="event.title"
-                v-model="event.open"
-                full-width
-                offset-x
-              >
+              <v-menu :key="event.title" v-model="event.open" full-width offset-x>
                 <template v-slot:activator="{ on }">
-                  <div
-                    v-if="!event.time"
-                    v-ripple
-                    class="my-event"
-                    v-on="on"
-                    v-html="event.title"
-                  ></div>
+                  <div v-if="!event.time" v-ripple class="my-event" v-on="on" v-html="event.title"></div>
                 </template>
-                <v-card
-                  color="grey lighten-4"
-                  min-width="350px"
-                  flat
-                >
-                  <v-toolbar
-                    color="primary"
-                    dark
-                  >
-                    <!-- <v-btn icon>
-                      <v-icon>edit</v-icon>
-                    </v-btn> -->
+                <v-card color="grey lighten-4" min-width="350px" flat>
+                  <v-toolbar color="primary" dark>
                     <v-toolbar-title v-html="event.title"></v-toolbar-title>
                     <v-spacer></v-spacer>
-                    
-                      {{date}}
-              
-                    <!-- <v-btn icon>
-                      <v-icon>more_vert</v-icon>
-                    </v-btn> -->
                   </v-toolbar>
                   <v-card-title primary-title>
                     <span v-html="event.details"></span>
                   </v-card-title>
                   <v-card-actions>
-                    <v-btn
-                      flat
-                      color="secondary"
-                    >
+                    <v-btn flat color="secondary">
                       Cancel
                     </v-btn>
                   </v-card-actions>
@@ -70,63 +70,168 @@
         </v-calendar>
       </v-sheet>
     </v-flex>
+<!-- FIN CALENDARIO -->
 
-
-
- <v-flex
-      sm4
-      xs12
-      class="text-sm-left text-xs-center"
-    >
+<!-- ANTERTIOR MES CALENDARIO -->
+    <v-flex sm4 xs12 class="text-sm-left text-xs-center">
       <v-btn @click="$refs.calendar.prev()">
-        <v-icon
-          dark
-          left
-        >
+        <v-icon dark left>
           keyboard_arrow_left
         </v-icon>
         ANTERIOR
       </v-btn>
     </v-flex>
-    <v-flex
-      sm4
-      xs12
-      class="text-xs-center"
-    >
-    
+    <v-flex sm4 xs12 class="text-xs-center">
 
-<!-- 
- <v-date-picker
-            v-model="fecha"
-          
-          ></v-date-picker>
-
-   {{fecha}} -->
-
+<!-- SIGUIENTE MES CALENDARIO -->
     </v-flex>
-    <v-flex
-      sm4
-      xs12
-      class="text-sm-right text-xs-center"
-    >
+    <v-flex sm4 xs12 class="text-sm-right text-xs-center">
       <v-btn @click="$refs.calendar.next()">
         SIGUIENTE
-        <v-icon
-          right
-          dark
-        >
+        <v-icon right dark>
           keyboard_arrow_right
         </v-icon>
       </v-btn>
     </v-flex>
 
-
-    
   </v-layout>
-
-  
 </template>
 
+
+
+
+
+
+
+
+<!-- INICIO SCRIPT -->
+<script>
+  import axios from 'axios'
+  export default {
+    // SCRIPT DATOS
+    data: () => ({
+      mes: new Date().toISOString().substr(0, 7),
+      today: new Date().toISOString().substr(0, 10),
+      events: [],
+      type: 'month',
+      start: new Date().toISOString().substr(0, 10),
+      end: '2020-01-01',
+      titulo:'',
+      detalle:'',
+      fecha:'',
+      formTitle:'Ingreso de Evento',
+      picker: new Date().toISOString().substr(0, 10),
+      dialog : false,
+      editedIndex: -1
+    }),
+
+    // SCRIPT PROPIEDADES COMPUTADAS
+    computed: {
+      eventsMap() {
+        const map = {}
+        this.events.forEach(e => (map[e.date] = map[e.date] || []).push(e))
+        return map
+      }
+    },
+    // SCRIPT EVENTO INICIALIZAR
+    created() {
+      this.listar();
+    },
+    // SCRIPT METODOS
+    methods: {
+      open(event) {
+        alert(event.title)
+      },
+      listar() {
+              let me = this;
+              let header = {
+                "Authorization": "Bearer " + this.$store.state.token
+              };
+              let configuracion = {
+                headers: header
+              };
+              axios.get('api/Eventos/Listar', configuracion).then(function (response) {
+                console.log(response.data);
+                me.events = response.data;
+              }).catch(function (error) {
+                console.log(error);
+              });
+      },
+      close () {
+                this.dialog = false;
+                this.limpiar();
+      },
+      limpiar(){
+                this.titulo="";
+                this.detalle="";
+                this.fecha="";
+     },
+            guardar () {
+                if (this.validar()){
+                    return;
+                }
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                if (this.editedIndex > -1) {
+                    //Código para editar
+                    let me=this;
+                    axios.put('api/Personas/Actualizar',{
+                        'idpersona':me.id,
+                        'tipo_persona':'Cliente',
+                        'nombre':me.nombre,
+                        'tipo_documento': me.tipo_documento,
+                        'num_documento':me.num_documento,
+                        'direccion':me.direccion,
+                        'telefono': me.telefono,
+                        'email':me.email                       
+                    },configuracion).then(function(response){
+                        me.close();
+                        me.listar();
+                        me.limpiar();                        
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                } else {
+                    //Código para guardar
+                    let me=this;
+                    axios.post('api/Personas/Crear',{
+                        'tipo_persona':'Cliente',
+                        'nombre':me.nombre,
+                        'tipo_documento': me.tipo_documento,
+                        'num_documento':me.num_documento,
+                        'direccion':me.direccion,
+                        'telefono': me.telefono,
+                        'email':me.email
+                    },configuracion).then(function(response){
+                        me.close();
+                        me.listar();
+                        me.limpiar();                        
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                }
+            },
+            validar(){
+                this.valida=0;
+                this.validaMensaje=[];
+
+                if (this.nombre.length<3 || this.nombre.length>100){
+                    this.validaMensaje.push("El nombre debe tener más de 3 caracteres y menos de 100 caracteres.");
+                }
+                if (!this.tipo_documento){
+                    this.validaMensaje.push("Seleccione un tipo documento.");
+                }
+                if (this.validaMensaje.length){
+                    this.valida=1;
+                }
+                return this.valida;
+            }
+
+
+
+    }
+  }
+</script>
 
 
 <style lang="stylus" scoped>
@@ -145,81 +250,3 @@
     margin-bottom: 1px;
   }
 </style>
-
-
-
-
-<script>
-  export default {
-    data: () => ({
-      mes:new Date().toISOString().substr(0, 7),
-      today: new Date().toISOString().substr(0, 10),
-      events: [
-        {
-          title: 'ENVIO D16',
-          details: 'Primer envio de SBIF',
-          date: '2019-06-30',
-          open: false
-        },
-        {
-          title: 'REUNIÓN GERENCIAL',
-          details: 'Reunión tema web intranet',
-          date: '2019-06-31',
-          open: false
-        },
-        {
-          title: 'ENVIO D17',
-          details: 'Going to the beach!',
-          date: '2019-06-01',
-          open: false
-        },
-        {
-          title: 'REUNIÓN ASIVA',
-          details: 'Spending time on how we do not have enough time',
-          date: '2019-06-07',
-          open: false
-        },
-        {
-          title: 'INSTALACIONES',
-          details: 'Celebrate responsibly',
-          date: '2019-06-03',
-          open: false
-        },
-        {
-          title: 'COMITE PARITARIO',
-          details: 'Eat chocolate until you pass out',
-          date: '2019-06-01',
-          open: false
-        },
-        {
-          title: 'VIAJE ANTOFAGASTA',
-          details: 'Mute myself the whole time and wonder why I am on this call',
-          date: '2019-06-21',
-          open: false
-        },
-        {
-          title: 'MODULO DE RIESGO',
-          details: 'Code like there is no tommorrow',
-          date: '2019-06-01',
-          open: false
-        }
-      ],
-        type: 'month',
-      start: new Date().toISOString().substr(0, 10),
-      end: '2020-01-01'
-    }),
-    computed: {
-      // convert the list of events into a map of lists keyed by date
-      eventsMap () {
-        const map = {}
-        this.events.forEach(e => (map[e.date] = map[e.date] || []).push(e))
-        return map
-      }
-    },
-    methods: {
-      open (event) {
-        alert(event.title)
-      }
-    }
-  }
-</script>
