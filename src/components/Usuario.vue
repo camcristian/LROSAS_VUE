@@ -80,6 +80,7 @@
                                 <span v-if="adAccion==2">Desactivar </span>
                                 el ítem {{ adNombre }}
                             </v-card-text>
+                            
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">

@@ -2,8 +2,10 @@
   <v-layout wrap>
 
 <!-- INICIO DIAGOLO  DE NUEVO EVENTO -->
-    <v-dialog v-model="dialog" max-width="500px">
+
+    <v-dialog  v-model="dialog" max-width="500px">
       <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo Evento</v-btn>
+ 
       <v-card>
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
@@ -20,27 +22,27 @@
                 </v-text-field>
             </v-flex>
               <v-flex xs12>
-                <v-date-picker v-model="picker" :reactive="reactive" locale="es-cl" full-width ></v-date-picker>
+                <v-date-picker v-model="picker"  locale="es-cl" full-width ></v-date-picker>
               </v-flex>
 
 
-    <v-flex xs12>
+    <v-flex  xs12 >
             <p>Color Caja</p>
             <v-btn-toggle v-model="icon">
               <v-btn flat value="1">
-                <span>AZUL</span>
-                <v-icon style="color:blue">mode_comment</v-icon>
+                <span>BAJA</span>
+                <v-icon style="color:#99CCCC">mode_comment</v-icon>
               </v-btn>
               <v-btn flat value="2">
-                <span>NARANJO</span>
-                <v-icon style="color:orange">mode_comment</v-icon>
+                <span>MEDIA</span>
+                <v-icon style="color:#99CCFF">mode_comment</v-icon>
               </v-btn>
               <v-btn flat value="3">
-                <span>VERDE</span>
-                <v-icon style="color:green">mode_comment</v-icon>
+                <span>ALTA</span>
+                <v-icon style="color:#3399FF">mode_comment</v-icon>
               </v-btn>
-              <v-btn flat value="4">
-                <span>AMARILLO</span>
+              <v-btn flat style="color:#003366" value="4">
+                <span>PRIORITARIA</span>
                 <v-icon style="color:yellow">mode_comment</v-icon>
               </v-btn>
             </v-btn-toggle>
@@ -63,6 +65,30 @@
 <!-- FIN DIAGOLO  DE NUEVO EVENTO -->
 
 
+
+
+
+
+  <!-- <v-flex sm2 xs12 class="text-sm-left  text-xs-center">
+      <v-btn @click="$refs.calendar.prev()">
+        <v-icon dark left>
+          keyboard_arrow_left
+        </v-icon>
+        ANTERIOR MES
+      </v-btn>
+    </v-flex>
+
+    <v-flex sm2 xs12 class="text-sm-left text-xs-center">
+      <v-btn @click="$refs.calendar.next()">
+        SIGUIENTE MES
+        <v-icon right dark>
+          keyboard_arrow_right
+        </v-icon>
+      </v-btn>
+    </v-flex>
+ -->
+
+
 <!-- INICIO CALENDARIO -->
     <v-flex xs12 class="mb-3">
       <v-sheet height="500">
@@ -74,7 +100,8 @@
                 <template v-slot:activator="{ on }">
                   <!-- <div v-if="!event.time" v-ripple v-bind:class="event.tipo===1 ? 'tipob' : 'tipoa'" v-on="on" v-html="event.title">
                   </div> -->
-                    <div v-if="!event.time" v-ripple v-bind:class="{'tipoa': event.tipo===1 , 'tipob': event.tipo===2 , 'tipoc': event.tipo===3, 'tipod': event.tipo===4}" v-on="on" v-html="event.title">
+                    <div v-if="!event.time" v-ripple v-bind:class="{'tipo1': event.tipo===1, 'tipo2': event.tipo===2 , 'tipo3': event.tipo===3, 'tipo4': event.tipo===4 , 'tipoCancelado': event.estado===2, 'tipoatraso': event.estado===3, 'tipoRealizado': event.estado===4}" v-on="on" v-html="event.title">
+
                   </div>
                <!-- {{event.tipo}} -->
                  <!-- <div v-if="!event.time" v-ripple class="my-event" v-on="on" v-html="event.title">
@@ -90,8 +117,14 @@
                     <span v-html="event.details"></span>
                   </v-card-title>
                   <v-card-actions>
-                    <v-btn flat color="secondary">
-                      Cancel
+                     <v-btn flat color="blue darken-2">
+                      Volver
+                    </v-btn>
+                    <v-btn flat color="black" @click="descartar(event.id)"> 
+                      Descartar
+                    </v-btn>
+                    <v-btn flat color="light-green darken-2" @click="realizado(event.id)"> 
+                     Realizado
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -100,32 +133,11 @@
           </template>
         </v-calendar>
       </v-sheet>
-    </v-flex>
+      </v-flex>
 <!-- FIN CALENDARIO -->
 
-<!-- ANTERTIOR MES CALENDARIO -->
-    <v-flex sm4 xs12 class="text-sm-left text-xs-center">
-      <v-btn @click="$refs.calendar.prev()">
-        <v-icon dark left>
-          keyboard_arrow_left
-        </v-icon>
-        ANTERIOR
-      </v-btn>
-    </v-flex>
-    <v-flex sm4 xs12 class="text-xs-center">
-
-<!-- SIGUIENTE MES CALENDARIO -->
-    </v-flex>
-    <v-flex sm4 xs12 class="text-sm-right text-xs-center">
-      <v-btn @click="$refs.calendar.next()">
-        SIGUIENTE
-        <v-icon right dark>
-          keyboard_arrow_right
-        </v-icon>
-      </v-btn>
-    </v-flex>
-
   </v-layout>
+
 </template>
 
 
@@ -155,7 +167,8 @@
       picker: new Date().toISOString().substr(0, 10),
       dialog : false,
       editedIndex: -1,
-      icon:''
+      icon:'',
+      id:''
     }),
 
     // SCRIPT PROPIEDADES COMPUTADAS
@@ -245,6 +258,38 @@
                         console.log(error);
                     });
                 }
+            },
+            descartar(idx){
+                let me=this;
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                axios.put('api/Eventos/Descartar/'+idx ,{},configuracion).then(function(response){
+                    // me.adModal=0;
+                    // me.adAccion=0;
+                    // me.adNombre="";
+                    // me.adId="";
+                 me.dialog = false;
+                me.limpiar();
+                    me.listar();                       
+                }).catch(function(error){
+                    console.log(error);
+                });
+            },
+            realizado(idx){
+                let me=this;
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                axios.put('api/Eventos/Realizado/'+idx ,{},configuracion).then(function(response){
+                    // me.adModal=0;
+                    // me.adAccion=0;
+                    // me.adNombre="";
+                    // me.adId="";
+                 me.dialog = false;
+                me.limpiar();
+                    me.listar();                       
+                }).catch(function(error){
+                    console.log(error);
+                });
             }
             // ,
             // validar(){
@@ -272,48 +317,78 @@
 
 <style lang="stylus" scoped>
  
-  .tipoa{  overflow: hidden;
+  .tipo1{  overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     border-radius: 2px;
-    background-color: #DF7401;
-    color: #ffffff;
-    border: 1px solid #DF7401;
+     background-color: #99CCCC;
+    color: #000;
+    border: 1px solid #99CCCC;
+   
     width: 100%;
     font-size: 12px;
     padding: 3px;
     cursor: pointer;
     margin-bottom: 1px;
   }
-  .tipob{
+  .tipo2{
    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     border-radius: 2px;
-    background-color: #1867c0;
-    color: #ffffff;
-    border: 1px solid #1867c0;
+    background-color: #99CCFF;
+    color: #000;
+    border: 1px solid #99CCFF;
     width: 100%;
     font-size: 12px;
     padding: 3px;
     cursor: pointer;
     margin-bottom: 1px;
   }
-  .tipoc{
+  .tipo3{
    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     border-radius: 2px;
-    background-color: #088A4B;
+    background-color: #3399FF;
     color: #ffffff;
-    border: 1px solid #088A4B;
+    border: 1px solid #3399FF;
     width: 100%;
     font-size: 12px;
     padding: 3px;
     cursor: pointer;
     margin-bottom: 1px;
   }
-  .tipod{
+  .tipo4{
+   overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 2px;
+    background-color: #003366;
+    color: #ffffff;
+    border: 1px solid #003366;
+    width: 100%;
+    font-size: 12px;
+    padding: 3px;
+    cursor: pointer;
+    margin-bottom: 1px;
+  }
+  .tipoCancelado{
+   overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 2px;
+    background-color: #000;
+    color: #ffffff;
+    border: 1px solid #000;
+    width: 100%;
+    font-size: 12px;
+    padding: 3px;
+    cursor: pointer;
+    margin-bottom: 1px;
+    text-decoration:line-through;
+  }
+  .tipoatraso{
    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -326,5 +401,20 @@
     padding: 3px;
     cursor: pointer;
     margin-bottom: 1px;
+  }
+  .tipoRealizado{
+   overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 2px;
+    background-color: #33CC00;
+    color: #ffffff;
+    border: 1px solid #33CC00;
+    width: 100%;
+    font-size: 12px;
+    padding: 3px;
+    cursor: pointer;
+    margin-bottom: 1px;
+    text-decoration:line-through;
   }
 </style>
