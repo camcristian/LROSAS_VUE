@@ -13,20 +13,27 @@
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
+
               <v-flex xs12>
-                <v-text-field v-model="titulo" label="Titulo">
+                <v-text-field v-model="titulo" label="Titulo" class="p-5">
                 </v-text-field>
               </v-flex>
+
               <v-flex xs12>
                 <v-text-field v-model="detalle" label="Detalle">
                 </v-text-field>
             </v-flex>
-              <v-flex xs12>
-                <v-date-picker v-model="picker"  locale="es-cl" full-width ></v-date-picker>
-              </v-flex>
+
+ <v-flex  xs12 >
+       <v-combobox
+          v-model="select"
+          :items="items"
+          label="Seleciones un Encargado del Evento"
+        ></v-combobox>
+  </v-flex>
 
 
-    <v-flex  xs12 >
+ <v-flex  xs12 >
             <p>Color Caja</p>
             <v-btn-toggle v-model="icon">
               <v-btn flat value="1">
@@ -41,16 +48,25 @@
                 <span>ALTA</span>
                 <v-icon style="color:#3399FF">mode_comment</v-icon>
               </v-btn>
-              <v-btn flat style="color:#003366" value="4">
+              <v-btn flat value="4">
                 <span>PRIORITARIA</span>
-                <v-icon style="color:yellow">mode_comment</v-icon>
+                <v-icon style="color:color:#003366">mode_comment</v-icon>
               </v-btn>
             </v-btn-toggle>
           </v-flex>
-              <!-- <v-flex xs12 sm12 md12 v-show="valida">
+
+              <v-flex xs12 mt-3>
+                <v-date-picker v-model="picker"  locale="es-cl" full-width ></v-date-picker>
+              </v-flex>
+
+
+              <v-flex xs12 v-show="valida" mb-2>
                 <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
                 </div>
-              </v-flex> -->
+              </v-flex>
+
+
+
             </v-layout>
           </v-container>
 
@@ -114,7 +130,11 @@
                     <v-spacer></v-spacer>
                   </v-toolbar>
                   <v-card-title primary-title>
+                     <div class="text-xs-center">
+          <v-chip>{{event.encargado}}</v-chip>
+        </div>
                     <span v-html="event.details"></span>
+
                   </v-card-title>
                   <v-card-actions>
                      <v-btn flat color="blue darken-2">
@@ -168,7 +188,19 @@
       dialog : false,
       editedIndex: -1,
       icon:'',
-      id:''
+      id:'',
+      valida: 0,
+      validaMensaje:[],
+         select: [''],
+        items: [
+          'Carlos Alfaro',
+          'Cristian Campos',
+          'Rossana Cerda',
+          'Ivan Hernandez',
+          'Sebastian Muñoz',
+          'Charlie Lopez',
+          'Alejandro Astorga'
+        ]
     }),
 
     // SCRIPT PROPIEDADES COMPUTADAS
@@ -185,7 +217,7 @@
     },
     // SCRIPT EVENTO INICIALIZAR
     created() {
-      this.listar();
+       this.listarUsuario(this.$store.state.usuario.idusuario);
     },
     // SCRIPT METODOS
     methods: {
@@ -207,6 +239,25 @@
                 console.log(error);
               });
       },
+      listarUsuario(xUsuario) {
+              let me = this;
+              let header = {
+                "Authorization": "Bearer " + this.$store.state.token
+              };
+              let configuracion = {
+                headers: header
+              };
+              axios.get('api/Eventos/ListarUsuario/'+xUsuario, configuracion).then(function (response) {
+                console.log(response.data);
+                me.events = response.data;
+              }).catch(function (error) {
+                console.log(error);
+              });
+      },
+
+
+
+ 
       close () {
                 this.dialog = false;
                 this.limpiar();
@@ -215,11 +266,14 @@
                 this.titulo="";
                 this.detalle="";
                 this.fecha="";
+                this.valida= 0;
+                this.icon="";
+                this.select=[''];
      },
             guardar () {
-                // if (this.validar()){
-                //     return;
-                // }
+                if (this.validar()){
+                    return;
+                }
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 if (this.editedIndex > -1) {
@@ -236,7 +290,7 @@
                         'email':me.email                       
                     },configuracion).then(function(response){
                         me.close();
-                        me.listar();
+                        me.listarUsuario(me.$store.state.usuario.idusuario);
                         me.limpiar();                        
                     }).catch(function(error){
                         console.log(error);
@@ -245,14 +299,16 @@
                     //Código para guardar
                     let me=this;
                     axios.post('api/Eventos/Crear',{
-                        'ID_USUARIO':'3006',
+                        'ID_USUARIO':me.$store.state.usuario.idusuario,
                         'date': me.picker,
                         'tipo':me.icon,
                         'title':me.titulo,
-                        'details': me.detalle
+                        'details': me.detalle,
+                        'Encargado': me.select
+
                     },configuracion).then(function(response){
                         me.close();
-                        me.listar();
+                        me.listarUsuario(me.$store.state.usuario.idusuario);
                         me.limpiar();                        
                     }).catch(function(error){
                         console.log(error);
@@ -270,7 +326,7 @@
                     // me.adId="";
                  me.dialog = false;
                 me.limpiar();
-                    me.listar();                       
+                 me.listarUsuario(me.$store.state.usuario.idusuario);                     
                 }).catch(function(error){
                     console.log(error);
                 });
@@ -286,27 +342,42 @@
                     // me.adId="";
                  me.dialog = false;
                 me.limpiar();
-                    me.listar();                       
+                  me.listarUsuario(me.$store.state.usuario.idusuario);                   
                 }).catch(function(error){
                     console.log(error);
                 });
             }
-            // ,
-            // validar(){
-            //     this.valida=0;
-            //     this.validaMensaje=[];
+            ,
+            validar(){
+                this.valida=0;
+                this.validaMensaje=[];
 
-            //     if (this.nombre.length<3 || this.nombre.length>100){
-            //         this.validaMensaje.push("El nombre debe tener más de 3 caracteres y menos de 100 caracteres.");
-            //     }
-            //     if (!this.tipo_documento){
-            //         this.validaMensaje.push("Seleccione un tipo documento.");
-            //     }
-            //     if (this.validaMensaje.length){
-            //         this.valida=1;
-            //     }
-            //     return this.valida;
-            // }
+                if (this.titulo.length<3 || this.titulo.length>20){
+                    this.validaMensaje.push("-El titulo debe tener más de 3 caracteres y menos de 20 caracteres.");
+                }
+                if (this.detalle.length<3 || this.detalle.length>30){
+                    this.validaMensaje.push("-El detalle debe tener más de 3 caracteres y menos de 30 caracteres.");
+                }
+
+                if (!this.picker){
+                    this.validaMensaje.push("-Seleccione una fecha");
+                }
+                
+                
+                if (!this.icon){
+                    this.validaMensaje.push("-Seleccione una categoria de mensaje");
+                }
+                
+                  if (!this.select){
+                    this.validaMensaje.push("-Seleccione una categoria de mensaje");
+                }
+
+
+                if (this.validaMensaje.length){
+                    this.valida=1;
+                }
+                return this.valida;
+            }
 
 
 
