@@ -8,14 +8,33 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: null,
-    usuario: null
+    usuario: null,
+    carga:false,
+    loading :{
+      titulo:'',
+      estado:false,
+      color:'primary'
+    }
   },
   mutations: {
+mostrarLoading(state,payload){
+state.loading.titulo =payload.titulo,
+state.loading.color =payload.color,
+state.loading.estado =true
+
+},
+ocultarLoading(state){
+  state.loading.estado =false
+  },
+
     setToken(state,token){
       state.token=token
     },
     setUsuario (state,usuario){
       state.usuario=usuario
+    },
+    cargarLoad(state,payload){
+      state.carga=payload
     }
   },
   actions: {

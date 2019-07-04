@@ -244,13 +244,34 @@
         </v-flex>
       </v-layout>
     </v-footer>
-
+<v-dialog
+      v-model="loading.estado"
+      hide-overlay
+      persistent
+      width="300"
+    >
+      <v-card
+        :color="color"
+        dark
+      >
+        <v-card-text>
+          {{loading.titulo}}
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
-
+import {mapState} from "vuex";
 export default {
+
+
   name: 'App',
   data () {
     return {
@@ -279,7 +300,8 @@ export default {
     },
     esVendedor(){
       return this.$store.state.usuario && this.$store.state.usuario.rol =='Vendedor';
-    }
+    },
+    ...mapState(['loading'])
   },
   created(){
     this.$store.dispatch("autoLogin");

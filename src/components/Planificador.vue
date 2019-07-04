@@ -168,8 +168,9 @@
 
 
 <!-- INICIO SCRIPT -->
-<script>
+<script >
   import axios from 'axios'
+  import {mapMutations} from "vuex";
   export default {
     // SCRIPT DATOS
     data: () => ({
@@ -221,6 +222,8 @@
     },
     // SCRIPT METODOS
     methods: {
+      ...mapMutations(['mostrarLoading','ocultarLoading'])
+      ,
       open(event) {
         alert(event.title)
       },
@@ -240,6 +243,7 @@
               });
       },
       listarUsuario(xUsuario) {
+        this.mostrarLoading({titulo:'Cargando Calendario',color:'black'})
               let me = this;
               let header = {
                 "Authorization": "Bearer " + this.$store.state.token
@@ -253,6 +257,7 @@
               }).catch(function (error) {
                 console.log(error);
               });
+       this.ocultarLoading()
       },
 
 
