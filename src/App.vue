@@ -251,7 +251,7 @@
       width="300"
     >
       <v-card
-        :color="color"
+        color="primary"
         dark
       >
         <v-card-text>

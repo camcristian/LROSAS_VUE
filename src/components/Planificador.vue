@@ -3,7 +3,7 @@
 
 <!-- INICIO DIAGOLO  DE NUEVO EVENTO -->
 
-    <v-dialog  v-model="dialog" max-width="500px">
+    <v-dialog  v-model="dialog" persistent max-width="500px">
       <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo Evento</v-btn>
  
       <v-card>
@@ -50,7 +50,7 @@
               </v-btn>
               <v-btn flat value="4">
                 <span>PRIORITARIA</span>
-                <v-icon style="color:color:#003366">mode_comment</v-icon>
+                <v-icon style="color:#003366">mode_comment</v-icon>
               </v-btn>
             </v-btn-toggle>
           </v-flex>
@@ -79,9 +79,91 @@
       </v-card>
     </v-dialog>
 <!-- FIN DIAGOLO  DE NUEVO EVENTO -->
+<!-- INICIO DIAGOLO POSPONER -->
+
+ <v-dialog
+      v-model="dialog2"
+      max-width="350"
+      persistent
+    >
+      <v-card>
+        <v-card-title class="headline">Posponer Evento</v-card-title>
+
+         <v-container grid-list-md>
+            <v-layout wrap>
+{{this.id}}
+              <v-flex xs12>
+                <v-text-field v-model="motivo" label="Motivo" class="p-5">
+                </v-text-field>
+              </v-flex>
+
+      
+              <v-flex xs12 mt-3>
+                <v-date-picker v-model="picker2"  locale="es-cl" full-width ></v-date-picker>
+              </v-flex>
+
+            </v-layout>
+          </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="grey darken-3 "
+            flat="flat"
+            @click="dialog2 = false"
+          >
+            Cancelar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+            @click="dialog2 = false"
+          >
+            Confirmar Posponer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
 
+<!-- 
 
+    <v-dialog  v-model="dialog2" max-width="500px">
+ 
+ 
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+
+              <v-flex xs12>
+                <v-text-field v-model="motivo" label="Motivo" class="p-5">
+                </v-text-field>
+              </v-flex>
+
+      
+              <v-flex xs12 mt-3>
+                <v-date-picker v-model="picker2"  locale="es-cl" full-width ></v-date-picker>
+              </v-flex>
+
+            </v-layout>
+          </v-container>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="guardar">Enviar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog> -->
+
+<!-- FIN DIAGOLO  POSPONER-->
 
 
 
@@ -137,8 +219,10 @@
 
                   </v-card-title>
                   <v-card-actions>
-                     <v-btn flat color="blue darken-2">
-                      Volver
+
+                   
+                     <v-btn flat color="blue darken-2"   @click.stop="dialog2 = true, cargarid (event.id) ">
+                      Posponer 
                     </v-btn>
                     <v-btn flat color="black" @click="descartar(event.id)"> 
                       Descartar
@@ -146,7 +230,9 @@
                     <v-btn flat color="light-green darken-2" @click="realizado(event.id)"> 
                      Realizado
                     </v-btn>
+     
                   </v-card-actions>
+
                 </v-card>
               </v-menu>
             </template>
@@ -174,6 +260,7 @@
   export default {
     // SCRIPT DATOS
     data: () => ({
+      id:'',
       mes: new Date().toISOString().substr(0, 7),
       today: new Date().toISOString().substr(0, 10),
       events: [],
@@ -187,10 +274,14 @@
       formTitle:'Ingreso de Evento',
       picker: new Date().toISOString().substr(0, 10),
       dialog : false,
+      dialog2 : false,
       editedIndex: -1,
       icon:'',
       id:'',
+      picker2:'',
+      motivo:'',
       valida: 0,
+      posponer: false,
       validaMensaje:[],
          select: [''],
         items: [
@@ -236,14 +327,14 @@
                 headers: header
               };
               axios.get('api/Eventos/Listar', configuracion).then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 me.events = response.data;
               }).catch(function (error) {
                 console.log(error);
               });
       },
       listarUsuario(xUsuario) {
-        this.mostrarLoading({titulo:'Cargando Calendario',color:'black'})
+        // this.mostrarLoading({titulo:'Cargando Calendario',color:'black'})
               let me = this;
               let header = {
                 "Authorization": "Bearer " + this.$store.state.token
@@ -257,12 +348,20 @@
               }).catch(function (error) {
                 console.log(error);
               });
-       this.ocultarLoading()
+      //  this.ocultarLoading()
+      },  
+      posponeractivar () {
+                this.posponer = true;
+  
+      },  
+      cargarid (idx){
+                this.id = idx;
+  
+      }
+      ,
+        posponerdesctivar() {
+                this.dialog = false;
       },
-
-
-
- 
       close () {
                 this.dialog = false;
                 this.limpiar();
