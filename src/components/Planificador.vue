@@ -91,14 +91,13 @@
 
          <v-container grid-list-md>
             <v-layout wrap>
-{{this.id}}
-              <v-flex xs12>
+              <!-- <v-flex xs12>
                 <v-text-field v-model="motivo" label="Motivo" class="p-5">
                 </v-text-field>
-              </v-flex>
+              </v-flex> -->
 
       
-              <v-flex xs12 mt-3>
+              <v-flex xs12 >
                 <v-date-picker v-model="picker2"  locale="es-cl" full-width ></v-date-picker>
               </v-flex>
 
@@ -119,7 +118,9 @@
           <v-btn
             color="green darken-1"
             flat="flat"
-            @click="dialog2 = false"
+       
+
+         @click="descartarPosponer() , guardarPosponer (),dialog2 = false"
           >
             Confirmar Posponer
           </v-btn>
@@ -221,7 +222,7 @@
                   <v-card-actions>
 
                    
-                     <v-btn flat color="blue darken-2"   @click.stop="dialog2 = true, cargarid (event.id) ">
+                     <v-btn flat color="blue darken-2"   @click.stop="dialog2 = true, cargarid (event) ">
                       Posponer 
                     </v-btn>
                     <v-btn flat color="black" @click="descartar(event.id)"> 
@@ -277,7 +278,7 @@
       dialog2 : false,
       editedIndex: -1,
       icon:'',
-      id:'',
+      evento:[],
       picker2:'',
       motivo:'',
       valida: 0,
@@ -343,7 +344,7 @@
                 headers: header
               };
               axios.get('api/Eventos/ListarUsuario/'+xUsuario, configuracion).then(function (response) {
-                console.log(response.data);
+              
                 me.events = response.data;
               }).catch(function (error) {
                 console.log(error);
@@ -354,8 +355,8 @@
                 this.posponer = true;
   
       },  
-      cargarid (idx){
-                this.id = idx;
+      cargarid (eventox){
+                this.evento = eventox;
   
       }
       ,
@@ -380,26 +381,26 @@
                 }
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                if (this.editedIndex > -1) {
-                    //Código para editar
-                    let me=this;
-                    axios.put('api/Personas/Actualizar',{
-                        'idpersona':me.id,
-                        'tipo_persona':'Cliente',
-                        'nombre':me.nombre,
-                        'tipo_documento': me.tipo_documento,
-                        'num_documento':me.num_documento,
-                        'direccion':me.direccion,
-                        'telefono': me.telefono,
-                        'email':me.email                       
-                    },configuracion).then(function(response){
-                        me.close();
-                        me.listarUsuario(me.$store.state.usuario.idusuario);
-                        me.limpiar();                        
-                    }).catch(function(error){
-                        console.log(error);
-                    });
-                } else {
+                // if (this.editedIndex > -1) {
+                //     //Código para editar
+                //     let me=this;
+                //     axios.put('api/Personas/Actualizar',{
+                //         'idpersona':me.id,
+                //         'tipo_persona':'Cliente',
+                //         'nombre':me.nombre,
+                //         'tipo_documento': me.tipo_documento,
+                //         'num_documento':me.num_documento,
+                //         'direccion':me.direccion,
+                //         'telefono': me.telefono,
+                //         'email':me.email                       
+                //     },configuracion).then(function(response){
+                //         me.close();
+                //         me.listarUsuario(me.$store.state.usuario.idusuario);
+                //         me.limpiar();                        
+                //     }).catch(function(error){
+                //         console.log(error);
+                //     });
+                // } else {
                     //Código para guardar
                     let me=this;
                     axios.post('api/Eventos/Crear',{
@@ -417,8 +418,74 @@
                     }).catch(function(error){
                         console.log(error);
                     });
-                }
+                    // }
+               
             },
+            // ActualizarPosponer () {
+                  
+            //          let header={"Authorization" : "Bearer " + this.$store.state.token};
+            //     let configuracion= {headers : header};
+            //       let me=this;
+            //       console.log(me.evento.id)
+            //       console.log(me.motivo)
+            //         axios.put('api/Eventos/Posponer',{
+            //           'ID':me.evento.ID,
+            //          'details': me.motivo,
+            //          'Estado':2
+            //         },configuracion).then(function(response){
+            //             // me.close();
+            //             // me.listarUsuario(me.$store.state.usuario.idusuario);
+            //             // me.limpiar();            
+            //             console.log(response.status)            
+            //         }).catch(function(error){
+            //             console.log(error);
+            //         });
+               
+            // },
+            
+            
+            
+            guardarPosponer () {
+                // if (this.validar()){
+                //     return;
+                // }
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                    let me=this;
+                    axios.post('api/Eventos/Crear',{
+                        'ID_USUARIO':me.$store.state.usuario.idusuario,
+                        'date': me.picker2,
+                        'tipo':me.evento.tipo,
+                        'title':me.evento.title,
+                        'details': '(Pospuesto '+ me.evento.date+') '+me.evento.details,
+                        'Encargado': me.evento.encargado
+
+                    },configuracion).then(function(response){
+                        me.close();
+                        me.listarUsuario(me.$store.state.usuario.idusuario);
+
+                        // me.limpiar();                        
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+               
+            },
+            descartarPosponer(){
+                let me=this;
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                axios.put('api/Eventos/DescartarPosponer/'+me.evento.id ,{},configuracion).then(function(response){
+                    // me.adModal=0;
+                    // me.adAccion=0;
+                    // me.adNombre="";
+                    // me.adId="";
+                //  me.dialog = false;
+                // me.limpiar();
+                //  me.listarUsuario(me.$store.state.usuario.idusuario);                     
+                }).catch(function(error){
+                    console.log(error);
+                });
+             },
             descartar(idx){
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
@@ -431,6 +498,22 @@
                  me.dialog = false;
                 me.limpiar();
                  me.listarUsuario(me.$store.state.usuario.idusuario);                     
+                }).catch(function(error){
+                    console.log(error);
+                });
+            },
+            Posponer(idx,motivox){
+                let me=this;
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                axios.put('api/Eventos/Descartar/'+idx ,{},configuracion).then(function(response){
+                 me.motivo=motivox;
+                    // me.adAccion=0;
+                    // me.adNombre="";
+                    // me.adId="";
+                //  me.dialog = false;
+                // me.limpiar();
+                //  me.listarUsuario(me.$store.state.usuario.idusuario);                     
                 }).catch(function(error){
                     console.log(error);
                 });

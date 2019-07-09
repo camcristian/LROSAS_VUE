@@ -25,8 +25,8 @@ var router = new Router({
       component: Home,
       meta :{
         administrador :true,
-        almacenero: true,
-        vendedor: true
+        informatica: true,
+        comercial: true
       }
     },
     {
@@ -125,12 +125,12 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.administrador)){
       next()
     }
-  }else if (store.state.usuario && store.state.usuario.rol== 'Almacenero'){
-    if (to.matched.some(record => record.meta.almacenero)){
+  }else if (store.state.usuario && store.state.usuario.rol== 'Informatica'){
+    if (to.matched.some(record => record.meta.informatica)){
       next()
     }
-  }else if (store.state.usuario && store.state.usuario.rol== 'Vendedor'){
-    if (to.matched.some(record => record.meta.vendedor)){
+  }else if (store.state.usuario && store.state.usuario.rol== 'comercial'){
+    if (to.matched.some(record => record.meta.comercial)){
       next()
     }
   } else{

@@ -8,7 +8,7 @@
       v-if="logueado"
     >
       <v-list dense>
-        <template v-if="esAdministrador || esAlmacenero || esVendedor">
+        <template v-if="esAdministrador || esInformatica ">
           <v-list-tile :to="{name:'home'}">
             <v-list-tile-action>
               <v-icon>home</v-icon>
@@ -18,7 +18,7 @@
             </v-list-tile-title>
           </v-list-tile>
         </template>
-        <template v-if="esAdministrador || esAlmacenero">
+        <!-- <template v-if="esAdministrador || esAlmacenero">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -146,9 +146,9 @@
             </v-list-tile>
           </v-list-group>
         </template>
+  -->
  
- 
- <template v-if="esAdministrador || esAlmacenero">
+ <template v-if="esAdministrador || esInformatica ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -172,7 +172,7 @@
           </v-list-group>
         </template>
 
-<template v-if="esAdministrador">
+<template v-if="esAdministrador ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -295,11 +295,11 @@ export default {
     esAdministrador(){
       return this.$store.state.usuario && this.$store.state.usuario.rol =='Administrador';
     },
-    esAlmacenero(){
-      return this.$store.state.usuario && this.$store.state.usuario.rol =='Almacenero';
+    esInformatica(){
+      return this.$store.state.usuario && this.$store.state.usuario.rol =='Informatica';
     },
     esVendedor(){
-      return this.$store.state.usuario && this.$store.state.usuario.rol =='Vendedor';
+      return this.$store.state.usuario && this.$store.state.usuario.rol =='Comercial';
     },
     ...mapState(['loading'])
   },
