@@ -2,10 +2,10 @@
   <v-layout wrap>
 
 <!-- INICIO DIAGOLO  DE NUEVO EVENTO -->
-
+{{Calculames}}
     <v-dialog  v-model="dialog" persistent max-width="500px">
       <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo Evento</v-btn>
- 
+
       <v-card>
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
@@ -87,7 +87,7 @@
       persistent
     >
       <v-card>
-        <v-card-title class="headline">Posponer Evento</v-card-title>
+        <v-card-title class="headline">Posponer Eventos</v-card-title>
 
          <v-container grid-list-md>
             <v-layout wrap>
@@ -192,7 +192,10 @@
     <v-flex xs12 class="mb-3">
       <v-sheet height="500">
         <v-calendar ref="calendar" v-model="start" :type="type" :now="today" :value="today" color="primary"
-          locale="es-cl">
+          locale="es-cl"
+   
+          
+          >
           <template v-slot:day="{ date }">
             <template v-for="event in eventsMap[date]">
               <v-menu :key="event.title" v-model="event.open" full-width offset-x>
@@ -307,6 +310,9 @@
 
                 return traertipo === 1 ? 'my-event' : 'tipoa'
             }
+      ,Calculames(){
+return this.start.toISOString().substr(0, 7)
+      }
     },
     // SCRIPT EVENTO INICIALIZAR
     created() {
