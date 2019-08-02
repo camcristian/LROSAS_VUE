@@ -1,39 +1,78 @@
 <template>
   <v-layout wrap>
 
-<!-- INICIO DIAGOLO  DE NUEVO EVENTO -->
-{{Calculames}}
-    <v-dialog  v-model="dialog" persistent max-width="500px">
-      <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo Evento</v-btn>
 
+
+
+<!-- INICIO DIAGOLO POSPONER -->
+
+ <v-dialog
+      v-model="dialog2"
+      max-width="350"
+      persistent
+    >
       <v-card>
+        <v-card-title class="headline">Posponer Eventos</v-card-title>
+         <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12 >
+                <v-date-picker v-model="picker2"  locale="es-cl" full-width ></v-date-picker>
+              </v-flex>
+
+            </v-layout>
+          </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="grey darken-3 "
+            flat="flat"
+            @click="dialog2 = false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+         @click="descartarPosponer() , guardarPosponer (),dialog2 = false"
+          >
+            Confirmar Posponer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+<!-- FIN DIAGOLO  POSPONER-->
+
+
+
+
+<!-- INICIO DIAGOLO  DE NUEVO EVENTO -->
+  <v-dialog  v-model="dialog" persistent max-width="500px">
+      <v-card  >
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-
-              <v-flex xs12>
+              <v-flex xs12 sm6>
                 <v-text-field v-model="titulo" label="Titulo" class="p-5">
                 </v-text-field>
+              </v-flex>
+    <v-flex  xs12 sm6>
+                  <v-combobox
+                      v-model="select"
+                      :items="items"
+                      label="Seleciones un Encargado del Evento"
+                    ></v-combobox>
               </v-flex>
 
               <v-flex xs12>
                 <v-text-field v-model="detalle" label="Detalle">
                 </v-text-field>
             </v-flex>
-
- <v-flex  xs12 >
-       <v-combobox
-          v-model="select"
-          :items="items"
-          label="Seleciones un Encargado del Evento"
-        ></v-combobox>
-  </v-flex>
-
-
- <v-flex  xs12 >
+        
+            <v-flex  xs12 >
             <p>Color Caja</p>
             <v-btn-toggle v-model="icon">
               <v-btn flat value="1">
@@ -54,147 +93,55 @@
               </v-btn>
             </v-btn-toggle>
           </v-flex>
-
               <v-flex xs12 mt-3>
                 <v-date-picker v-model="picker"  locale="es-cl" full-width ></v-date-picker>
               </v-flex>
-
-
               <v-flex xs12 v-show="valida" mb-2>
                 <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
                 </div>
               </v-flex>
-
-
-
             </v-layout>
           </v-container>
-
         </v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
           <v-btn color="blue darken-1" flat @click.native="guardar">Enviar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 <!-- FIN DIAGOLO  DE NUEVO EVENTO -->
-<!-- INICIO DIAGOLO POSPONER -->
 
- <v-dialog
-      v-model="dialog2"
-      max-width="350"
-      persistent
-    >
+
+
+<!-- INICIO CARD CALENDARIO-->
+    <v-flex xs12>
       <v-card>
-        <v-card-title class="headline">Posponer Eventos</v-card-title>
+        <v-toolbar>
+    <v-toolbar-items>
 
-         <v-container grid-list-md>
-            <v-layout wrap>
-              <!-- <v-flex xs12>
-                <v-text-field v-model="motivo" label="Motivo" class="p-5">
-                </v-text-field>
-              </v-flex> -->
+        <v-btn  slot="activator" color="primary" @click.stop="dialog = true" >Nuevo Evento</v-btn>
 
-      
-              <v-flex xs12 >
-                <v-date-picker v-model="picker2"  locale="es-cl" full-width ></v-date-picker>
-              </v-flex>
+    
+   <v-spacer></v-spacer>
+        <v-btn @click="$refs.calendar.prev()"> <v-icon dark left>  first_page </v-icon> <h3></h3> </v-btn>
+        <v-btn @click="$refs.calendar.next()"> <h3></h3><v-icon right dark>  last_page </v-icon> </v-btn>
+     
+    </v-toolbar-items>
+  </v-toolbar>
 
-            </v-layout>
-          </v-container>
+  
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="grey darken-3 "
-            flat="flat"
-            @click="dialog2 = false"
-          >
-            Cancelar
-          </v-btn>
-
-          <v-btn
-            color="green darken-1"
-            flat="flat"
-       
-
-         @click="descartarPosponer() , guardarPosponer (),dialog2 = false"
-          >
-            Confirmar Posponer
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-
-<!-- 
-
-    <v-dialog  v-model="dialog2" max-width="500px">
- 
- 
-      <v-card>
-        <v-card-title>
-          <span class="headline">{{ formTitle }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-
-              <v-flex xs12>
-                <v-text-field v-model="motivo" label="Motivo" class="p-5">
-                </v-text-field>
-              </v-flex>
-
-      
-              <v-flex xs12 mt-3>
-                <v-date-picker v-model="picker2"  locale="es-cl" full-width ></v-date-picker>
-              </v-flex>
-
-            </v-layout>
-          </v-container>
-
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-          <v-btn color="blue darken-1" flat @click.native="guardar">Enviar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
-
-<!-- FIN DIAGOLO  POSPONER-->
-
-
-
-  <!-- <v-flex sm2 xs12 class="text-sm-left  text-xs-center">
-      <v-btn @click="$refs.calendar.prev()">
-        <v-icon dark left>
-          keyboard_arrow_left
-        </v-icon>
-        ANTERIOR MES
-      </v-btn>
-    </v-flex>
-
-    <v-flex sm2 xs12 class="text-sm-left text-xs-center">
-      <v-btn @click="$refs.calendar.next()">
-        SIGUIENTE MES
-        <v-icon right dark>
-          keyboard_arrow_right
-        </v-icon>
-      </v-btn>
-    </v-flex>
- -->
-
-
+        <v-card-title primary-title>
+          <!-- <div>
+            <h3 class="headline mb-0">Calendario</h3>
+            <div> {{ card_text }} </div>
+          </div> -->
 <!-- INICIO CALENDARIO -->
     <v-flex xs12 class="mb-3">
       <v-sheet height="500">
-        <v-calendar ref="calendar" v-model="start" :type="type" :now="today" :value="today" color="primary"
+        <v-calendar ref="calendar"  :end="end"  :start="start" v-model="start" :type="type" :now="today" :value="today" color="primary"
           locale="es-cl"
-   
-          
+
           >
           <template v-slot:day="{ date }">
             <template v-for="event in eventsMap[date]">
@@ -246,6 +193,61 @@
       </v-flex>
 <!-- FIN CALENDARIO -->
 
+        </v-card-title>
+
+        <v-card-actions>
+ <v-chip color="primary" text-color="white">{{Calculames}}</v-chip>
+
+          <!-- <v-btn flat color="orange">Share</v-btn>
+          <v-btn flat color="orange">Explore</v-btn> -->
+        </v-card-actions>
+      </v-card>
+    </v-flex>
+
+
+
+
+<!-- FIN CARD CALENDARIO-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<v-flex sm2 xs12 class="text-sm-left  text-xs-center">
+      <v-btn @click="$refs.calendar.prev()">
+        <v-icon dark left>
+          keyboard_arrow_left
+        </v-icon>
+        ANTERIOR MES
+      </v-btn>
+    </v-flex>
+
+    <v-flex sm2 xs12 class="text-sm-left text-xs-center">
+      <v-btn @click="$refs.calendar.next()">
+        SIGUIENTE MES
+        <v-icon right dark>
+          keyboard_arrow_right
+        </v-icon>
+      </v-btn>
+    </v-flex> -->
+
+<!-- 
+  <v-flex xs12 class="text-sm-left text-xs-center">
+
+      </v-flex> -->
+
+
   </v-layout>
 
 </template>
@@ -270,7 +272,7 @@
       events: [],
       type: 'month',
       start: new Date().toISOString().substr(0, 10),
-      end: '2020-01-01',
+      end: '2018-01-01',
       titulo:'',
       detalle:'',
       fecha:'',
@@ -311,7 +313,18 @@
                 return traertipo === 1 ? 'my-event' : 'tipoa'
             }
       ,Calculames(){
-return this.start.toISOString().substr(0, 7)
+
+
+
+// var fecha = new Date(this.start);
+// var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+var options = { year: 'numeric', month: 'long' };
+var  fecha = new Date(this.start);
+
+ 
+
+return  fecha.toLocaleDateString("es-ES", options)
+// this.start.substr(5, 2)
       }
     },
     // SCRIPT EVENTO INICIALIZAR

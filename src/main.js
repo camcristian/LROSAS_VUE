@@ -9,7 +9,7 @@ import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
 
 Vue.config.productionTip = false
-axios.defaults.baseURL='http://www.lautaroweb.cl:8070/'
+axios.defaults.baseURL='http://192.168.0.174:8080/'
 
 //axios.defaults.baseURL='https://localhost:44388/'
 
