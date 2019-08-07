@@ -1,4 +1,7 @@
 <template>
+
+
+
   <v-layout wrap>
 
 
@@ -124,7 +127,7 @@
 
 
 
-        <v-toolbar>
+         <v-toolbar flat color="white">
            <v-btn outlined class="mr-4" @click.stop="dialog = true">
             Nuevo Evento
           </v-btn>
@@ -152,7 +155,7 @@
     
 
 <v-toolbar-title>{{Calculames}}</v-toolbar-title>
-
+{{$router.params.id}}
   </v-toolbar>
 
   
@@ -292,6 +295,7 @@
   import {mapMutations} from "vuex";
   export default {
     // SCRIPT DATOS
+    name: 'Planifica',
     data: () => ({
       id:'',
       mes: new Date().toISOString().substr(0, 7),

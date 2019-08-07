@@ -71,6 +71,7 @@ export default {
   },
 
     methods :{
+        
         ...mapMutations(['cargarLoad']),
         ingresar(){
 this.error=null;
@@ -82,16 +83,18 @@ this.$store.commit('cargarLoad',true)
 
             if (this.$v.$invalid){
             this.error="Email o password no son validos";
-
+this.$store.commit('cargarLoad',false)
             }
                 else{
             axios.post('api/Usuarios/Login', {email: this.$v.email.$model , password: this.$v.password.$model})
                         .then(respuesta => {
                 return respuesta.data
+                
             })
             .then(data => {        
                 this.$store.dispatch("guardarToken", data.token)
                 this.$router.push({ name: 'home' })
+          this.$store.commit('cargarLoad',false)
             })
             .catch(err => {
        
@@ -103,19 +106,16 @@ this.$store.commit('cargarLoad',true)
                 }else{
                     this.error="Ocurrió un error";
                 }
-
+this.$store.commit('cargarLoad',false)
             })
-
+// this.$store.commit('cargarLoad',false)
             }
-            // setTimeout(() => {
-            //         this.$store.commit('cargarLoad',false)
-            // }, 3000);
-
-                this.$store.commit('cargarLoad',false)
+                // this.$store.commit('cargarLoad',false)
     
         }
     }
-    
+
+
 }
 </script>
 

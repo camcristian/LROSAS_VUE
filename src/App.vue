@@ -167,7 +167,16 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-         
+          <v-list-tile :to="{ name: 'plan/2'}">
+              <v-list-tile-action>
+                <v-icon>date_range</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Planificador Soporte
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
 
           </v-list-group>
         </template>
@@ -311,5 +320,10 @@ export default {
       this.$store.dispatch("salir");
     }
   }
+  // ,
+  // created(){
+  //   console.log('Llamando created');
+  //     this.$store.dispatch("salir");
+  // }
 }
 </script>
