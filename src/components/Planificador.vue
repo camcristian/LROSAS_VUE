@@ -1,4 +1,7 @@
 <template>
+
+
+
   <v-layout wrap>
 
 
@@ -124,10 +127,21 @@
 
 
 
-        <v-toolbar>
-           <v-btn outlined class="mr-4" @click.stop="dialog = true">
+         <v-toolbar flat color="white">
+
+
+       
+           <v-btn outlined class="mr-2" @click.stop="dialog = true">
             Nuevo Evento
           </v-btn>
+
+          <v-btn outlined class="mr-2" @click="crearPDF()">
+            <v-icon>print</v-icon>
+    
+          </v-btn>
+
+
+      
 
         
            <v-btn fab text small  @click="$refs.calendar.prev()">
@@ -136,23 +150,10 @@
           <v-btn fab text small @click="$refs.calendar.next()">
             <v-icon small>arrow_forward_ios</v-icon>
           </v-btn>
-<!-- 
-    <v-toolbar-items>
-
-        
-
-    
-
-        <v-btn @click="$refs.calendar.prev()"> <v-icon dark left>  first_page </v-icon> <h3></h3> </v-btn>
-        <v-btn @click="$refs.calendar.next()"> <h3></h3><v-icon right dark>  last_page </v-icon> </v-btn>
-      
-
-
-    </v-toolbar-items> -->
     
 
 <v-toolbar-title>{{Calculames}}</v-toolbar-title>
-
+ 
   </v-toolbar>
 
   
@@ -290,6 +291,9 @@
 <script >
   import axios from 'axios'
   import {mapMutations} from "vuex";
+  import jsPDF from 'jspdf';
+  import AutoTable from 'jspdf-autotable';
+
   export default {
     // SCRIPT DATOS
     data: () => ({
@@ -360,10 +364,39 @@ return  fecha.toLocaleDateString("es-ES", options)
     // SCRIPT METODOS
     methods: {
       
-      nth (d) {
-        return d > 3 && d < 21
-          ? 'th'
-          : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10]
+      crearPDF() {
+
+var columns = [
+  {title:"Codigo", dataKey: "ID"},
+  {title:"Fecha", dataKey: "date"},
+  {title:"Titulo", dataKey: "title"},
+];
+
+//  var rows =[{ID:"1",date:"1",title:"1"}];
+ var rows =[];
+this.events.map(function(x){
+  rows.push({ ID:x.id, date:x.date, title:x.title });
+});
+
+ var doc = new jsPDF('p', 'pt');
+
+doc.autoTable(columns,rows,{
+    // styles: {fillColor: [255, 0, 0]},
+    // columnStyles: {0: {halign: 'center', fillColor: [0, 255, 0]}}, // Cells in first column centered and green
+    margin: {top: 60},
+    addPageContent: function(data){
+   doc.text("Calendario",40,30)
+   }
+
+});
+
+ 
+   doc.save('Calendario.pdf')
+
+
+
+
+
       },
       ...mapMutations(['mostrarLoading','ocultarLoading'])
       ,

@@ -11,7 +11,7 @@ import Login from './components/Login.vue'
 import Ingreso from './components/Ingreso.vue'
 import Venta from './components/Venta.vue'
 import Planificador from './components/Planificador.vue'
-import Plan from './views/Planifica.vue'
+import Riesgo from './components/Riesgo.vue'
 import store from './store'
 
 Vue.use(Router)
@@ -117,10 +117,10 @@ var router = new Router({
       }
     },
     {
-      path: '/plan/:id',
-      name: 'plan',
-      component: Plan,
-      meta :{
+      path: '/riesgo',
+      name: 'riesgo',
+      component: Riesgo,
+      meta : {
         libre: true
       }
     }

@@ -167,16 +167,30 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-          <v-list-tile :to="{ name: 'plan/2'}">
-              <v-list-tile-action>
-                <v-icon>date_range</v-icon>
-              </v-list-tile-action>
+      
+
+          </v-list-group>
+        </template>
+         <template v-if="esAdministrador ">
+          <v-list-group>
+            <v-list-tile slot="activator">
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Planificador Soporte
+                  Riesgo
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'riesgo'}">
+              <v-list-tile-action>
+                <v-icon>verified_user</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Riesgo Crediticio
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+      
 
           </v-list-group>
         </template>
@@ -320,10 +334,10 @@ export default {
       this.$store.dispatch("salir");
     }
   }
-  // ,
-  // created(){
-  //   console.log('Llamando created');
-  //     this.$store.dispatch("salir");
-  // }
+  ,
+  created(){
+    console.log('Llamando created');
+      this.$store.dispatch("salir");
+  }
 }
 </script>
