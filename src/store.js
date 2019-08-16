@@ -41,6 +41,9 @@ ocultarLoading(state){
     guardarToken({commit},token){
       commit("setToken", token)
       commit("setUsuario", decode(token))
+      let date = new Date(decode(token).exp)
+      console.log(decode(token));
+     
       localStorage.setItem("token", token)
     },
     autoLogin({commit}){

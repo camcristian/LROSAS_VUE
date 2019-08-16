@@ -309,27 +309,7 @@
             this.select();
         },
         methods:{
-            mostrarNuevo(){
-                this.verNuevo=1;
-            },
-            ocultarNuevo(){
-                this.verNuevo=0;
-                this.limpiar();
-            },
-            buscarCodigo(){
-                let me=this;
-                me.errorArticulo=null;
-                let header={"Authorization" : "Bearer " + this.$store.state.token};
-                let configuracion= {headers : header};
-                axios.get('api/Articulos/BuscarCodigoIngreso/'+this.codigo,configuracion)
-                .then(function(response){
-                    //console.log(response);
-                    me.agregarDetalle(response.data);
-                }).catch(function(error){
-                    console.log(error);
-                    me.errorArticulo='No existe el artículo';
-                });
-            },
+           
             listarArticulo(){
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
