@@ -4,7 +4,7 @@
             <v-card>
                 <v-toolbar dark color="blue darken-3">
                     <v-toolbar-title>
-                        Acceso
+                        Acceso V1.5
                     </v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
@@ -17,8 +17,7 @@
                     <v-text-field v-model.Lazy="$v.password.$model" type="password" color="accent" label="Password" outline @keyup.enter="ingresar" required>
                         
                     </v-text-field>
-                
-              
+
                     <v-flex class="red--text" v-if="error">
                         {{error}}
                     </v-flex>
@@ -32,7 +31,7 @@
                         <v-btn @click="ingresar" color="primary" :disabled="$v.$invalid">Ingresar</v-btn>
                     </v-flex>
                      <v-flex text-xs-right v-if="carga">
-                        <pulse-loader :loading="loading" color="#00426A" ></pulse-loader>
+                     <pulse-loader color="#00426A" ></pulse-loader> 
                     </v-flex>
 
 

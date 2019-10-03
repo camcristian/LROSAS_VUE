@@ -155,6 +155,9 @@
 
 <v-container grid-list-md>
  <v-layout wrap>
+                                
+                                
+                                
                                 <v-flex xs12 sm6 md3>
                                     <v-text-field  v-model="id_solicitud" label="Id Solicitud2" readonly="true">
                                 </v-text-field>

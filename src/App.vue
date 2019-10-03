@@ -163,11 +163,30 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Planificador
+                  Planificador Individual
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-      
+      <v-list-tile :to="{ name: 'PSoporte'}">
+              <v-list-tile-action>
+                <v-icon>desktop_mac</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Planificación Soporte
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+       <v-list-tile :to="{ name: 'Proyectos'}">
+              <v-list-tile-action>
+                <v-icon>work</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proyectos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
 
           </v-list-group>
         </template>
@@ -256,7 +275,7 @@
         </v-slide-y-transition>
       </v-container>
     </v-content>
-    <v-footer dark height="auto">
+    <!-- <v-footer dark height="auto">
       <v-layout justify-center>
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
@@ -266,7 +285,7 @@
           </v-card>
         </v-flex>
       </v-layout>
-    </v-footer>
+    </v-footer> -->
 <v-dialog
       v-model="loading.estado"
       hide-overlay

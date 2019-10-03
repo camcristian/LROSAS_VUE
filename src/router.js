@@ -11,6 +11,8 @@ import Login from './components/Login.vue'
 import Ingreso from './components/Ingreso.vue'
 import Venta from './components/Venta.vue'
 import Planificador from './components/Planificador.vue'
+import Proyectos from './components/Proyectos.vue'
+import PSoporte from './components/PSoporte.vue'
 import Riesgo from './components/Riesgo.vue'
 import store from './store'
 
@@ -112,6 +114,22 @@ var router = new Router({
       path: '/Planificador',
       name: 'Planificador',
       component: Planificador,
+      meta : {
+        libre: true
+      }
+    },
+    {
+      path: '/Proyectos',
+      name: 'Proyectos',
+      component: Proyectos,
+      meta : {
+        libre: true
+      }
+    },
+    {
+      path: '/PSoporte',
+      name: 'PSoporte',
+      component: PSoporte,
       meta : {
         libre: true
       }

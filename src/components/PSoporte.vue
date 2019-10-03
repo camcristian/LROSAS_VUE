@@ -7,111 +7,6 @@
 
 
 
-<!-- INICIO DIAGOLO POSPONER -->
-
- <v-dialog
-      v-model="dialog2"
-      max-width="350"
-      persistent
-    >
-      <v-card>
-        <v-card-title class="headline">Posponer Eventos</v-card-title>
-         <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12 >
-                <v-date-picker v-model="picker2"  locale="es-cl" full-width ></v-date-picker>
-              </v-flex>
-
-            </v-layout>
-          </v-container>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="grey darken-3 "
-            flat="flat"
-            @click="dialog2 = false"
-          >
-            Cancelar
-          </v-btn>
-          <v-btn
-            color="green darken-1"
-            flat="flat"
-         @click="descartarPosponer(), guardarPosponer (),dialog2 = false"
-          >
-            Confirmar Posponer
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-<!-- FIN DIAGOLO  POSPONER-->
-
-
-
-
-<!-- INICIO DIAGOLO  DE NUEVO EVENTO -->
-  <v-dialog  v-model="dialog" persistent max-width="500px">
-      <v-card  >
-        <v-card-title>
-          <span class="headline">{{ formTitle }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12 sm6>
-                <v-text-field v-model="titulo" label="Titulo" class="p-5">
-                </v-text-field>
-              </v-flex>
-    <v-flex  xs12 sm6>
-                  <v-combobox
-                      v-model="select"
-                      :items="items"
-                      label="Seleciones un Encargado del Evento"
-                    ></v-combobox>
-              </v-flex>
-
-              <v-flex xs12>
-                <v-text-field v-model="detalle" label="Detalle">
-                </v-text-field>
-            </v-flex>
-        
-            <v-flex  xs12 >
-            <p>Color Caja</p>
-            <v-btn-toggle v-model="icon">
-              <v-btn flat value="1">
-                <span>BAJA</span>
-                <v-icon style="color:#99CCCC">mode_comment</v-icon>
-              </v-btn>
-              <v-btn flat value="2">
-                <span>MEDIA</span>
-                <v-icon style="color:#99CCFF">mode_comment</v-icon>
-              </v-btn>
-              <v-btn flat value="3">
-                <span>ALTA</span>
-                <v-icon style="color:#3399FF">mode_comment</v-icon>
-              </v-btn>
-              <v-btn flat value="4">
-                <span>PRIORITARIA</span>
-                <v-icon style="color:#003366">mode_comment</v-icon>
-              </v-btn>
-            </v-btn-toggle>
-          </v-flex>
-              <v-flex xs12 mt-3>
-                <v-date-picker v-model="picker"  locale="es-cl" full-width ></v-date-picker>
-              </v-flex>
-              <v-flex xs12 v-show="valida" mb-2>
-                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                </div>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-          <v-btn color="blue darken-1" flat @click.native="guardar">Enviar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 <!-- FIN DIAGOLO  DE NUEVO EVENTO -->
 
 
@@ -131,10 +26,7 @@
 
 
        
-           <v-btn outlined class="mr-2" @click.stop="dialog = true">
-            Nuevo Evento
-          </v-btn>
-
+     
           <v-btn outlined class="mr-2" @click="crearPDF()">
             <v-icon>print</v-icon>
     
@@ -196,20 +88,7 @@
                     <span v-html="event.details"></span>
 
                   </v-card-title>
-                  <v-card-actions>
-
-                   
-                     <v-btn flat color="blue darken-2"   @click.stop="dialog2 = true, cargarid (event) ">
-                      Posponer 
-                    </v-btn>
-                    <v-btn flat color="black" @click="descartar(event.id)"> 
-                      Descartar
-                    </v-btn>
-                    <v-btn flat color="light-green darken-2" @click="realizado(event.id)"> 
-                     Realizado
-                    </v-btn>
-     
-                  </v-card-actions>
+         
 
                 </v-card>
               </v-menu>
@@ -315,10 +194,15 @@
       editedIndex: -1,
       icon:'',
       evento:[ {
-           name: 'event 3',
-          start: '2019-09-14 18:30',
-          end: '2019-09-17 20:30',
-          color: '#4285F4',
+          date: "2019-09-25",
+details: "Restructuracion Sistema Giro Capital",
+encargado: "Sebastian Muñoz     ",
+estado: 4,
+iD_USUARIO: 3006,
+id: 1,
+open: false,
+tipo: 3,
+title: "173Normalizacion Tabla Giro Capital",
         }],
       picker2:'',
       motivo:'',
@@ -417,7 +301,7 @@ doc.autoTable(columns,rows,{
                 headers: header
               };
               axios.get('api/Eventos/Listar', configuracion).then(function (response) {
-               // console.log(response.data);
+                
                 me.events = response.data;
               }).catch(function (error) {
                 console.log(error);
@@ -432,9 +316,12 @@ doc.autoTable(columns,rows,{
               let configuracion = {
                 headers: header
               };
-              axios.get('api/Eventos/ListarUsuario/'+xUsuario, configuracion).then(function (response) {
-                console.log(response.data);
+              axios.get('api/Eventos/ListarUsuario/3009', configuracion).then(function (response) {
+
+
+               // console.log(me.events.data);
                 me.events = response.data;
+                   console.log(me.events);
               }).catch(function (error) {
                 console.log(error);
               });
