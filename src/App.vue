@@ -243,7 +243,16 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-
+          <v-list-tile :to="{ name: 'grafico'}">
+              <v-list-tile-action>
+                <v-icon>people</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Grafico
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
           </v-list-group>
         </template>
 

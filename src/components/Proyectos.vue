@@ -302,7 +302,7 @@
 
 <v-layout justify-center row fill-height pt-5>
 <v-flex xs12 md6 >
-  <div id="canvas-wrapper">
+  <div id="canvas-wrapper" ref="entrada">
 
 <canvas  id="myChart"></canvas>
   </div>
@@ -519,7 +519,7 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
             close () {
                       this.dialog2 = false;
                       this.limpiar();      
-                    //  this.ListarConsulta();
+                     this.ListarConsulta();
             },
             //   METODO CERRAR EVENTO
             closeE() {
@@ -560,32 +560,39 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
               me.nombresMeses.push(x.etiqueta);
               me.totalMeses.push(x.valor);
               });
+            
+            
+            const textField = this.$refs.entrada
+            textField.innerHTML = '<canvas  id="myChart"></canvas>'
 
 
               var ctx = document.getElementById('myChart');
        
+		
+            
+
 
                var mychart = new Chart(ctx, {
-                  type: 'bar',
+                  type: 'pie',
                   data: {
                       labels: me.nombresMeses,
                       datasets: [{
-                          label: 'proyectos',
+                          label: 'Sistema',
                           data: me.totalMeses,
                         
                           backgroundColor: [
-                              'rgba(255, 99, 132, 0.2)',
-                              'rgba(54, 162, 235, 0.2)',
-                              'rgba(255, 206, 86, 0.2)',
-                              'rgba(75, 192, 192, 0.2)',
-                              'rgba(153, 102, 255, 0.2)',
-                              'rgba(255, 159, 64, 0.2)',
-                               'rgba(255, 99, 132, 0.2)',
-                              'rgba(54, 162, 235, 0.2)',
-                              'rgba(255, 206, 86, 0.2)',
-                              'rgba(75, 192, 192, 0.2)',
-                              'rgba(153, 102, 255, 0.2)',
-                              'rgba(255, 159, 64, 0.2)'
+                                   'rgba(255, 99, 132, 1)',
+                              'rgba(54, 162, 235, 1)',
+                              'rgba(255, 206, 86, 1)',
+                              'rgba(75, 192, 192, 1)',
+                              'rgba(153, 102, 255, 1)',
+                              'rgba(255, 159, 64, 1)',
+                              'rgba(255, 99, 132, 1)',
+                              'rgba(54, 162, 235, 1)',
+                              'rgba(255, 206, 86, 1)',
+                              'rgba(75, 192, 192, 1)',
+                              'rgba(153, 102, 255, 1)',
+                              'rgba(255, 159, 64, 1)'
                           ],
                           borderColor: [
                               'rgba(255, 99, 132, 1)',
@@ -614,7 +621,86 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
                           }]
                       },
 
+   title: {
+            display: true,
+            text: 'Proyectos por Sistemas'
+        },  tooltips: {
+            // Disable the on-canvas tooltip
+            enabled: false,
 
+            custom: function(tooltipModel) {
+                // Tooltip Element
+                var tooltipEl = document.getElementById('chartjs-tooltip');
+
+                // Create element on first render
+                if (!tooltipEl) {
+                    tooltipEl = document.createElement('div');
+                    tooltipEl.id = 'chartjs-tooltip';
+                    tooltipEl.innerHTML = '<table></table>';
+                    document.body.appendChild(tooltipEl);
+                }
+
+                // Hide if no tooltip
+                if (tooltipModel.opacity === 0) {
+                    tooltipEl.style.opacity = 0;
+                    return;
+                }
+
+                // Set caret Position
+                tooltipEl.classList.remove('above', 'below', 'no-transform');
+                if (tooltipModel.yAlign) {
+                    tooltipEl.classList.add(tooltipModel.yAlign);
+                } else {
+                    tooltipEl.classList.add('no-transform');
+                }
+
+                function getBody(bodyItem) {
+                    return bodyItem.lines;
+                }
+
+                // Set Text
+                if (tooltipModel.body) {
+                    var titleLines = tooltipModel.title || [];
+                    var bodyLines = tooltipModel.body.map(getBody);
+
+                    var innerHtml = '<thead>';
+
+                    titleLines.forEach(function(title) {
+                        innerHtml += '<tr><th>' + title + '</th></tr>';
+                    });
+                    innerHtml += '</thead><tbody>';
+
+                    bodyLines.forEach(function(body, i) {
+                        var colors = tooltipModel.labelColors[i];
+                        var style = 'background:' + colors.backgroundColor;
+                        style += '; border-color:' + colors.borderColor;
+                        style += '; border-width: 2px';
+                        var span = '<span style="' + style + '"></span>';
+                        innerHtml += '<tr><td>' + span + body + '</td></tr>';
+                    });
+                    innerHtml += '</tbody>';
+
+                    var tableRoot = tooltipEl.querySelector('table');
+                    tableRoot.innerHTML = innerHtml;
+                }
+
+                // `this` will be the overall tooltip
+                var position = this._chart.canvas.getBoundingClientRect();
+
+                // Display, position, and set styles for font
+                tooltipEl.style.opacity = 1;
+                tooltipEl.style.position = 'absolute';
+                tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+                tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+                tooltipEl.style.fontFamily = tooltipModel._bodyFontFamily;
+                tooltipEl.style.fontSize = tooltipModel.bodyFontSize + 'px';
+                tooltipEl.style.fontStyle = tooltipModel._bodyFontStyle;
+                tooltipEl.style.padding = tooltipModel.yPadding + 'px ' + tooltipModel.xPadding + 'px';
+                tooltipEl.style.pointerEvents = 'none';
+            }
+        }
+    
+    
        
                   }
               });

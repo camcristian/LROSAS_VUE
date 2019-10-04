@@ -14,6 +14,7 @@ import Planificador from './components/Planificador.vue'
 import Proyectos from './components/Proyectos.vue'
 import PSoporte from './components/PSoporte.vue'
 import Riesgo from './components/Riesgo.vue'
+import grafico from './components/Grafico.vue'
 import store from './store'
 
 Vue.use(Router)
@@ -138,6 +139,14 @@ var router = new Router({
       path: '/riesgo',
       name: 'riesgo',
       component: Riesgo,
+      meta : {
+        libre: true
+      }
+    },
+    {
+      path: '/grafico',
+      name: 'grafico',
+      component: grafico,
       meta : {
         libre: true
       }
