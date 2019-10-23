@@ -104,7 +104,7 @@
 
    
                       <!--TOOLBAR-INICIO-DIALOG-NUEVO EVENTO-->
-                       <v-dialog v-model="dialog3"  max-width="500px">
+                       <v-dialog v-model="dialog3"  max-width="500px"  persistent >
                        <!-- persistent -->
                         <v-btn slot="activator" color="primary" dark class="mb-2"><v-icon dark>add</v-icon></v-btn>
 
@@ -117,26 +117,27 @@
                                 <v-layout wrap>
                                   
                                 <v-flex xs12 >
-                                    <v-text-field v-model="xTitulo" label="Titulo">
+                                    <v-text-field v-model="$v.proyectoDetalle.xTitulo.$model" label="Titulo"  :error="$v.proyectoDetalle.xTitulo.$error ? true :false" :counter="$v.proyectoDetalle.xTitulo.$params.maxLength.max">
+                                        
                                     </v-text-field>
                                 </v-flex>
 
                                 <v-flex xs12 >
-                                    <v-textarea v-model="xDetalle" label="Detalle">
+                                    <v-textarea v-model="$v.proyectoDetalle.xDetalle.$model" label="Detalle"  :error="$v.proyectoDetalle.xDetalle.$error ? true :false" :counter="$v.proyectoDetalle.xDetalle.$params.maxLength.max">
                                     </v-textarea>
                                 </v-flex>
 
                                 <v-flex xs12 >
                                 <v-slider
-                                    v-model="xAvance.val"
-                                    :label="xAvance.label"
-                                    :thumb-color="xAvance.color"
+                                    v-model="$v.proyectoDetalle.xAvance.$model.val"
+                                    :label="$v.proyectoDetalle.xAvance.$model.label"
+                                    :thumb-color="$v.proyectoDetalle.$model.xAvance.color"
                                     thumb-label="always"
                                   ></v-slider>
                                   </v-flex>
 
                                 <v-flex xs6 >
-                                    <v-select v-model="xTipoEvento"
+                                    <v-select v-model="$v.proyectoDetalle.$model.xTipoEvento"
                                     :items="TipoEvento" label="Tipo">
                                     </v-select>
                                 </v-flex>
@@ -146,7 +147,7 @@
                                     <v-dialog
                                       ref="dialog"
                                       v-model="modal"
-                                      :return-value.sync="date3"
+                                      :return-value.sync="picker3"
                                       persistent
                                       lazy
                                       full-width
@@ -154,17 +155,17 @@
                                     >
                                       <template v-slot:activator="{ on }">
                                         <v-text-field
-                                          v-model="date3"
+                                          v-model="picker3"
                                           label="Fecha"
                                           prepend-icon="event"
                                           readonly
                                           v-on="on"
                                         ></v-text-field>
                                       </template>
-                                      <v-date-picker v-model="date3" scrollable locale="es-cl" >
+                                      <v-date-picker v-model="picker3" scrollable locale="es-cl" >
                                         <v-spacer></v-spacer>
                                         <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-                                        <v-btn flat color="primary" @click="$refs.dialog.save(date3)">OK</v-btn>
+                                        <v-btn flat color="primary" @click="$refs.dialog.save(picker3)">OK</v-btn>
                                       </v-date-picker>
                                     </v-dialog>
                                   </v-flex>
@@ -174,8 +175,8 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardarEvento()">Guardar</v-btn>
+                                <v-btn color="blue darken-1" flat @click.native="closeE">Cancelar</v-btn>
+                                <v-btn color="blue darken-1" flat :disabled="$v.proyectoDetalle.$invalid" @click.native="guardarEvento()">Guardar</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -235,9 +236,16 @@
                      
 
    
+     
+                   
 
 
-            <v-data-table
+<div v-if="!carga">
+
+
+
+
+            <v-data-table 
                 :headers="headers"
                 :items="creditos"
                 :search="search"
@@ -251,6 +259,9 @@
                         search
                         </v-icon>
                     </td>
+                     <td>{{ props.item.id }}</td>
+                    <td>{{ props.item.sistema }}</td>
+
                      <td>
                         <div v-if=" props.item.estado.trim() === 'Inicio' ">
                             <v-chip color="grey lighten-1" >Inicio</v-chip>
@@ -280,10 +291,11 @@
                             <v-chip color="red accent-2">RECHAZADO</v-chip>
                         </div>                
                     </td>
-                    <td>{{ props.item.id }}</td>
+
+                    
                     <td>{{ props.item.proyecto }}</td>
-                    <td>{{ fechacambiar(props.item.fecha_Entrega) }}</td>
                     <td>{{ fechacambiar(props.item.fecha_Solicitud) }}</td>
+                    <td>{{ fechacambiar(props.item.fecha_Entrega) }}</td>
                     <td>{{ props.item.especialista  }}</td>
                     <td>{{ props.item.solicitado}}</td>
                     <td>{{ props.item.tipo }}</td>
@@ -296,28 +308,52 @@
              <!-- FIN TABLA-->
 
 
+  <!-- <v-flex v-if="carga">
+
+  </v-flex> -->
+
+ 
 
 
 
 
-<v-layout justify-center row fill-height pt-5>
+
+<v-layout justify-center row fill-height pt-5 >
 <v-flex xs12 md6 >
   <div id="canvas-wrapper" ref="entrada">
 
 <canvas  id="myChart"></canvas>
+
+
+
   </div>
 
 </v-flex>
-   
+ 
+
+
+
+
  </v-layout>
 
 
+</div>
 
+
+
+
+<v-layout justify-center row fill-height pt-5 v-if="carga"> 
+
+<rise-loader color="#00426A" ></rise-loader>
+
+ </v-layout>
 
 <!-- FIN BODY-->
 <!-- FIN -->
 </v-flex>        
  </v-layout>
+
+
 </template>
 
 
@@ -326,7 +362,13 @@
 <script>
 import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
      import axios from 'axios';
+     import {mapState, mapMutations} from 'vuex';
      import Chart from 'chart.js';
+     import 'chartjs-plugin-labels';
+     import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+     import RingLoader from 'vue-spinner/src/RingLoader.vue'
+import RiseLoader from 'vue-spinner/src/RiseLoader.vue'
+
     export default {
       // INICIO DATA
         data(){
@@ -338,18 +380,19 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
         dialog: false,
         dialog2: false,
         dialog3: false,
-        sistemas:['ARCHIVO','AUDITORIA','BSC','COBRANZA','GESTIONBD','LAUCOOP','PROVEEDORES','RIESGO','PREVENSIÓN DELITOS','OTRO','SIN SISTEMA'],
-        especialistas:['Alejandro Astorga','Carlos Alfaro','Charlie Lopez','Cristián Campos','Ivan Hernandez','Sebastian Muñoz','Rossana Cerda'],
-        tipologias:['Software','Hardware','Comunicaciones y Redes','Instalaciones de Hardware','Auditorías','Peritajes','Consultoría','Seguridad'],
+        sistemas:['ARCHIVO','AUDITORIA','BSC','COBRANZA','GESTIONBD','LAUCOOP','PROVEEDORES','RIESGO','ADMINISTRADOR WEB','INTRANET CORPORATIVA','PAGINA WEB','PREVENSIÓN DELITOS','SCG','OTRO','SIN SISTEMA'],
+        especialistas:['Alejandro Astorga','Carlos Alfaro','Charlie Lopez','Cristián Campos','Ivan Hernandez','Sebastian Muñoz','Rossana Cerda','Soporte'],
+        tipologias:['Software','Hardware','Comunicaciones y Redes','Instalaciones de Hardware','Auditorías','Peritajes','Consultoría','Seguridad','Otros'],
         TipoEvento:['INICIO','CORREO','COLABORATIVO','DESARROLLO','TESTING','FIN'],
         creditos: [],
         headers: [
         { text: 'Opciones', value: 'opciones', sortable: false },
-        { text: 'Estado', value: 'estado', sortable: false },
-        { text: 'ID', value: 'ID'},
-        { text: 'Proyecto', value: 'Proyecto' },
-        { text: 'Fecha_Entrega', value: 'Fecha_Entrega' },
+        { text: 'ID', value: 'ID' ,sortable: true},
+        { text: 'Sistema', value: 'Sistema', sortable: true},
+        { text: 'Estado', value: 'estado', sortable: false }, 
+        { text: 'Proyecto', value: 'Proyecto',sortable: true},
         { text: 'Fecha_Solicitud', value: 'Fecha_Solicitud' },
+        { text: 'Fecha_Entrega', value: 'Fecha_Entrega' },
         { text: 'Especialista', value: 'Especialista' },
         { text: 'Solicitado', value: 'Solicitado' },
         { text: 'Tipo', value: 'Tipo' }
@@ -372,13 +415,15 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
         xSolicitado :'',
         xTipo :''
         },
-        xTitulo:'',
-        xDetalle:'',
-        xTipoEvento:'',
-        xAvance: { label: 'Avance', val: 0, color: 'blue' },
+        proyectoDetalle:{
+                xTitulo:'',
+                xDetalle:'',
+                xTipoEvento:'',
+                xAvance: { label: 'Avance', val: 0, color: 'blue' },
+        },
         picker: new Date().toISOString().substr(0, 10),
-      picker2: new Date().toISOString().substr(0, 10),
-        date3: new Date().toISOString().substr(0, 10),
+        picker2: new Date().toISOString().substr(0, 10),
+        picker3: new Date().toISOString().substr(0, 10),
         menu: false,
         modal: false,
         modal2: false,
@@ -397,9 +442,23 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
     xEspecialista :{required},
     xSolicitado :{required, maxLength: maxLength(20)},
     xTipo:{required}
-    }
-
     },
+    proyectoDetalle:{
+    xTitulo:{required, maxLength: maxLength(50)},
+    xDetalle:{required, maxLength: maxLength(200)},
+    xTipoEvento:{required}, 
+    xAvance:{required}
+    }    
+    
+    } 
+    ,computed:{
+    ...mapState(['carga'])
+    }
+    , components: {
+    PulseLoader,RingLoader,RiseLoader
+    }
+    
+    ,
     // CREATE
     created () {
             this.listar(); 
@@ -407,17 +466,28 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
     // METODOS
         methods:{
     //   METODO LISTAR
+    ...mapMutations(['cargarLoad']),
+
             listar(){
+
+                this.$store.commit('cargarLoad',true)
+
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                  
                 let configuracion= {headers : header};
                 axios.get('api/Eventos/ListarProyectos',configuracion).then(function(response){
+                     console.log(response.data)
                     me.creditos=response.data;
-                
+
+            
+
                 }).catch(function(error){
                     console.log(error);
                 });
+
+          this.$store.commit('cargarLoad',false)
+
             },    
             //   METODO LISTAR PROYECTO
             listarProyecto(){
@@ -426,7 +496,7 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
                 let configuracion= {headers : header};
                 axios.get('api/Eventos/ListarProyectosDetalle/'+me.ID,configuracion).then(function(response){
                 me.eventos=response.data;
-                // console.log(response.data)
+            //  console.log(response.data)
                 }).catch(function(error){
                     console.log(error);
                 });
@@ -463,8 +533,8 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
                         'ID_USUARIO':me.$store.state.usuario.idusuario,
                         'Proyecto': me.$v.proyecto.xProyecto.$model,
                         'Sistema': me.$v.proyecto.xSistema.$model,
-                        'Fecha_Entrega':me.fechacambiar2(me.picker),
-                        'Fecha_Solicitud':me.fechacambiar2(me.picker2),
+                        'Fecha_Entrega':me.fechacambiar2(me.picker2),
+                        'Fecha_Solicitud':me.fechacambiar2(me.picker),
                         'Especialista': me.$v.proyecto.xEspecialista.$model,
                         'Solicitado': me.$v.proyecto.xSolicitado.$model,
                         'Tipo': me.$v.proyecto.xTipo.$model,
@@ -479,19 +549,17 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
             },
             //   METODO GUARDAR EVENTO
             guardarEvento () {
-                // if (this.validar()){
-                //     return;
-                // }
+            
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                     let me=this;
                     axios.post('api/Eventos/CrearProyectoDetalle',{
                         'ID_PROYECTO':this.ID,
-                        'titulo': this.xTitulo,
-                        'detalle': this.xDetalle,
-                        'avance':this.xAvance.val,
-                        'fecha':me.fechacambiar2(me.date3),
-                        'tipo': this.xTipoEvento,
+                        'titulo': this.$v.proyectoDetalle.xTitulo.$model,
+                        'detalle': this.$v.proyectoDetalle.xDetalle.$model,
+                        'avance':this.$v.proyectoDetalle.xAvance.$model.val,
+                        'fecha':this.fechacambiar2(this.picker3),
+                        'tipo': this.$v.proyectoDetalle.xTipoEvento.$model,
                         'Estado':1
                     },configuracion).then(function(response){
                         me.closeE();
@@ -539,11 +607,12 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
             //   METODO EVENTO
             limpiarE(){
 
-                    this.xTitulo="",
-                    this.xDetalle  ="",
-                    this.xAvance.val=0;
-                    this.date3=new Date().toISOString().substr(0, 10)
-                    this.xTipoEvento="";
+            this.$v.proyectoDetalle.xTitulo.$model="",
+            this.$v.proyectoDetalle.xDetalle.$model  ="",
+            this.$v.proyectoDetalle.xAvance.$model.val=0;
+            this.picker3=new Date().toISOString().substr(0, 10)
+            this.$v.proyectoDetalle.xTipoEvento.$model="";
+
 
             },
             //   METODO EVENTO
@@ -559,21 +628,19 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
             me.mesesValores.map(function(x){
               me.nombresMeses.push(x.etiqueta);
               me.totalMeses.push(x.valor);
-              });
-            
-            
+              }); 
+
+
+
             const textField = this.$refs.entrada
             textField.innerHTML = '<canvas  id="myChart"></canvas>'
-
-
               var ctx = document.getElementById('myChart');
-       
-		
-            
+
 
 
                var mychart = new Chart(ctx, {
                   type: 'pie',
+                 
                   data: {
                       labels: me.nombresMeses,
                       datasets: [{
@@ -581,32 +648,38 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
                           data: me.totalMeses,
                         
                           backgroundColor: [
-                                   'rgba(255, 99, 132, 1)',
-                              'rgba(54, 162, 235, 1)',
-                              'rgba(255, 206, 86, 1)',
-                              'rgba(75, 192, 192, 1)',
-                              'rgba(153, 102, 255, 1)',
-                              'rgba(255, 159, 64, 1)',
-                              'rgba(255, 99, 132, 1)',
-                              'rgba(54, 162, 235, 1)',
-                              'rgba(255, 206, 86, 1)',
-                              'rgba(75, 192, 192, 1)',
-                              'rgba(153, 102, 255, 1)',
-                              'rgba(255, 159, 64, 1)'
+                              '#ed1b2e',
+                              '#6d6e70',
+                              '#FFEB3B',
+                              '#8ec06c',
+                              '#d7d7d8',
+                              '#FF5722',
+                              '#56a0d3',
+                              '#004b79',
+                              '#7f181b',
+                              '#795548',
+                              '#2A1A5E',
+                              '##E040FB',
+                              '#00796B',
+                              '#FFC107'
+                             
                           ],
                           borderColor: [
-                              'rgba(255, 99, 132, 1)',
-                              'rgba(54, 162, 235, 1)',
-                              'rgba(255, 206, 86, 1)',
-                              'rgba(75, 192, 192, 1)',
-                              'rgba(153, 102, 255, 1)',
-                              'rgba(255, 159, 64, 1)',
-                              'rgba(255, 99, 132, 1)',
-                              'rgba(54, 162, 235, 1)',
-                              'rgba(255, 206, 86, 1)',
-                              'rgba(75, 192, 192, 1)',
-                              'rgba(153, 102, 255, 1)',
-                              'rgba(255, 159, 64, 1)'
+                                       '#ed1b2e',
+                              '#6d6e70',
+                              '#FFEB3B',
+                              '#8ec06c',
+                              '#d7d7d8',
+                              '#FF5722',
+                              '#56a0d3',
+                              '#004b79',
+                              '#7f181b',
+                              '#795548',
+                              '#2A1A5E',
+                              '##E040FB',
+                              '#00796B',
+                              '#FFC107'
+                              
                           ],
                           borderWidth: 1
                       }]
@@ -619,89 +692,13 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
                                   beginAtZero: true
                               }
                           }]
-                      },
-
-   title: {
-            display: true,
-            text: 'Proyectos por Sistemas'
-        },  tooltips: {
-            // Disable the on-canvas tooltip
-            enabled: false,
-
-            custom: function(tooltipModel) {
-                // Tooltip Element
-                var tooltipEl = document.getElementById('chartjs-tooltip');
-
-                // Create element on first render
-                if (!tooltipEl) {
-                    tooltipEl = document.createElement('div');
-                    tooltipEl.id = 'chartjs-tooltip';
-                    tooltipEl.innerHTML = '<table></table>';
-                    document.body.appendChild(tooltipEl);
-                }
-
-                // Hide if no tooltip
-                if (tooltipModel.opacity === 0) {
-                    tooltipEl.style.opacity = 0;
-                    return;
-                }
-
-                // Set caret Position
-                tooltipEl.classList.remove('above', 'below', 'no-transform');
-                if (tooltipModel.yAlign) {
-                    tooltipEl.classList.add(tooltipModel.yAlign);
-                } else {
-                    tooltipEl.classList.add('no-transform');
-                }
-
-                function getBody(bodyItem) {
-                    return bodyItem.lines;
-                }
-
-                // Set Text
-                if (tooltipModel.body) {
-                    var titleLines = tooltipModel.title || [];
-                    var bodyLines = tooltipModel.body.map(getBody);
-
-                    var innerHtml = '<thead>';
-
-                    titleLines.forEach(function(title) {
-                        innerHtml += '<tr><th>' + title + '</th></tr>';
-                    });
-                    innerHtml += '</thead><tbody>';
-
-                    bodyLines.forEach(function(body, i) {
-                        var colors = tooltipModel.labelColors[i];
-                        var style = 'background:' + colors.backgroundColor;
-                        style += '; border-color:' + colors.borderColor;
-                        style += '; border-width: 2px';
-                        var span = '<span style="' + style + '"></span>';
-                        innerHtml += '<tr><td>' + span + body + '</td></tr>';
-                    });
-                    innerHtml += '</tbody>';
-
-                    var tableRoot = tooltipEl.querySelector('table');
-                    tableRoot.innerHTML = innerHtml;
-                }
-
-                // `this` will be the overall tooltip
-                var position = this._chart.canvas.getBoundingClientRect();
-
-                // Display, position, and set styles for font
-                tooltipEl.style.opacity = 1;
-                tooltipEl.style.position = 'absolute';
-                tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
-                tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-                tooltipEl.style.fontFamily = tooltipModel._bodyFontFamily;
-                tooltipEl.style.fontSize = tooltipModel.bodyFontSize + 'px';
-                tooltipEl.style.fontStyle = tooltipModel._bodyFontStyle;
-                tooltipEl.style.padding = tooltipModel.yPadding + 'px ' + tooltipModel.xPadding + 'px';
-                tooltipEl.style.pointerEvents = 'none';
-            }
-        }
-    
-    
-       
+                      },plugins:{
+labels: {
+render: 'percentage',
+fontColor: ['white','white','black','black','black','white','black','white','white','white','white'],
+precision: 2
+}
+}
                   }
               });
 
@@ -722,7 +719,7 @@ import { required, minLength, maxLength  } from 'vuelidate/lib/validators';
                  
                 let configuracion= {headers : header};
                 axios.get('api/Eventos/ProyectosMes12',configuracion).then(function(response){
-          
+                  console.log(response.data)
                  me.mesesValores=response.data;
     
                  me.loadProductosMasVendidos()

@@ -20,7 +20,7 @@ import store from './store'
 Vue.use(Router)
 
 var router = new Router({
-  mode: 'history',
+mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -165,11 +165,16 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.informatica)){
       next()
     }
-  }else if (store.state.usuario && store.state.usuario.rol== 'comercial'){
+  }
+  else if (store.state.usuario && store.state.usuario.rol== 'comercial'){
     if (to.matched.some(record => record.meta.comercial)){
       next()
     }
-  } else{
+  }
+  else if (!to.matched.length) {
+      name: 'login'
+    }
+   else{
     next({
       name: 'login'
     })

@@ -321,7 +321,7 @@ doc.autoTable(columns,rows,{
 
                // console.log(me.events.data);
                 me.events = response.data;
-                   console.log(me.events);
+                 //  console.log(me.events);
               }).catch(function (error) {
                 console.log(error);
               });

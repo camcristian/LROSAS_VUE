@@ -14,6 +14,11 @@ export default new Vuex.Store({
       titulo:'',
       estado:false,
       color:'primary'
+    },
+    notificacion:{
+      visible:false,
+      mensaje:'',
+      color:'info'
     }
   },
   mutations: {
@@ -35,7 +40,31 @@ ocultarLoading(state){
     },
     cargarLoad(state,payload){
       state.carga=payload
+    },
+    mostrarInformacion(state,mensaje){
+      state.notificacion.mensaje= mensaje
+      state.notificacion.color='info'
+      state.notificacion.visible=true
+    },
+    mostrarExito(state,mensaje){
+      state.notificacion.mensaje= mensaje
+      state.notificacion.color='success'
+      state.notificacion.visible=true
+    },
+    mostrarAdvertencia(state,mensaje){
+      state.notificacion.mensaje= mensaje
+      state.notificacion.color='warning'
+      state.notificacion.visible=true
+    },
+    mostrarError(state,mensaje){
+      state.notificacion.mensaje= mensaje
+      state.notificacion.color='error'
+      state.notificacion.visible=true
+    },
+    ocultarNotificacion(state){
+      state.notificacion.visible=false
     }
+
   },
   actions: {
     guardarToken({commit},token){

@@ -4,7 +4,7 @@
             <v-card>
                 <v-toolbar dark color="blue darken-3">
                     <v-toolbar-title>
-                        Acceso V1.5
+                        Acceso V1.11
                     </v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
@@ -46,7 +46,7 @@
 <script>
 import axios from 'axios';
 import { required,email } from 'vuelidate/lib/validators';
-import {mapState, mapMutations} from 'vuex';
+import {mapState,mapMutations, mapActions} from "vuex";
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
     data(){
@@ -69,9 +69,9 @@ export default {
     PulseLoader
   },
 
-    methods :{
+    methods:{
         
-        ...mapMutations(['cargarLoad']),
+        ...mapMutations(['cargarLoad','mostrarExito']),
         ingresar(){
 this.error=null;
 
@@ -82,7 +82,7 @@ this.$store.commit('cargarLoad',true)
 
             if (this.$v.$invalid){
             this.error="Email o password no son validos";
-this.$store.commit('cargarLoad',false)
+           this.$store.commit('cargarLoad',false)
             }
                 else{
             axios.post('api/Usuarios/Login', {email: this.$v.email.$model , password: this.$v.password.$model})
@@ -93,8 +93,13 @@ this.$store.commit('cargarLoad',false)
             .then(data => {        
                 this.$store.dispatch("guardarToken", data.token)
                 this.$router.push({ name: 'home' })
-          this.$store.commit('cargarLoad',false)
-            })
+                this.$store.commit('cargarLoad',false)
+
+                let mensaje ='¡Bienvenido '+this.$store.state.usuario.nombre+' !'
+        
+        this.mostrarExito(mensaje)
+       
+       })
             .catch(err => {
        
                
@@ -105,7 +110,7 @@ this.$store.commit('cargarLoad',false)
                 }else{
                     this.error="Ocurrió un error";
                 }
-this.$store.commit('cargarLoad',false)
+                    this.$store.commit('cargarLoad',false)
             })
 // this.$store.commit('cargarLoad',false)
             }
@@ -113,7 +118,7 @@ this.$store.commit('cargarLoad',false)
     
         }
     }
-
+ 
 
 }
 </script>

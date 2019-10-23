@@ -270,12 +270,47 @@
         <span class="hidden-sm-and-down">Sistema SCG</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+    
+     <!-- <v-avatar v-if="logueado">
+      <img
+
+        src="/src/assets/perfil/CCAMPOS.png"
+        alt="John"
+      >
+    </v-avatar> -->
+
+  <v-snackbar
+      v-model="notificacion.visible"
+    :color="notificacion.color"
+  
+    multi-line
+    top
+  
+    dark
+    >
+     {{notificacion.mensaje}}
+     <v-btn color="white" flat @click="ocultarNotificacion"> 
+       Cerrar
+        </v-btn>
+    </v-snackbar>
+
+
+
+   <v-btn dark v-if="logueado" disabled>
+     <v-icon left >account_circle</v-icon>
+        {{this.$store.state.usuario.nombre}}
+    
+      </v-btn>
+
+
+
       <v-btn @click="salir" v-if="logueado">
         <v-icon>logout</v-icon> Salir
       </v-btn>
       <v-btn :to="{name: 'login'}" v-else >
         <v-icon>apps</v-icon> Login
       </v-btn>
+
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
@@ -295,6 +330,7 @@
         </v-flex>
       </v-layout>
     </v-footer> -->
+
 <v-dialog
       v-model="loading.estado"
       hide-overlay
@@ -315,11 +351,15 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+
   </v-app>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapState,mapMutations, mapActions} from "vuex";
+
+
 export default {
 
 
@@ -353,11 +393,17 @@ export default {
       return this.$store.state.usuario && this.$store.state.usuario.rol =='Comercial';
     },
     ...mapState(['loading'])
+    ,
+    notificacion(){
+      return  this.$store.state.notificacion
+    }
   },
   created(){
     this.$store.dispatch("autoLogin");
   },
   methods:{
+    ...mapMutations(['ocultarNotificacion'])
+    ,
     salir(){
       this.$store.dispatch("salir");
     }
@@ -367,5 +413,6 @@ export default {
     console.log('Llamando created');
       this.$store.dispatch("salir");
   }
+   
 }
 </script>
